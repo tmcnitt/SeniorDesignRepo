@@ -1,11 +1,10 @@
 import logo from './logo.svg';
 import './App.css';
+import Inbox from './Inbox'
 
 function App() {
   return (
-    <div className="App bg-black">
-      <p>Test</p>
-    </div>
+    <Inbox />
   );
 }
 
