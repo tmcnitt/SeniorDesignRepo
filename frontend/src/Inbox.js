@@ -210,7 +210,7 @@ export default function Example() {
         <body class="h-full overflow-hidden">
         ```
       */}
-            <div className="h-full flex flex-col">
+            <div className="h-full flex flex-col p">
                 {/* Top nav*/}
                 <header className="flex-shrink-0 relative h-16 lg:bg-gray-800  flex items-center">
                     {/* Logo area */}
@@ -232,7 +232,7 @@ export default function Example() {
                 {/* Bottom section */}
                 <div className="min-h-0 pl-2 pr-2 flex-1 flex overflow-hidden">
                     {/* Main area */}
-                    <main className="min-w-0 flex-1 border-t border-gray-200 xl:flex">
+                    <main className="min-w-0 flex-1 border-t border-gray-200 xl:flex px-5">
                         <section
                             aria-labelledby="message-heading"
                             className="min-w-0 flex-1 h-full flex flex-col overflow-hidden xl:order-last"
