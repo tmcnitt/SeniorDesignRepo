@@ -14,37 +14,39 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 function App() {
   return (
-    <Router>
-      <Switch>
-        <Route path="/inbox">
-          <Inbox />
-        </Route>
-        <Route path="/settings">
-          <Settings />
-        </Route>
-        <Route path="/createlesson">
-          <CreateLesson />
-        </Route>
-        <Route path="/createassignment">
-          <CreateAssignment />
-        </Route>
-        <Route path="/studentlesson">
-          <StudentLesson />
-        </Route>
-        <Route path="/login">
-          <Login />
-        </Route>
-        <Route path="/dashStaff">
-          <StaffDash />
-        </Route>
-        <Route path="/dashStudent">
-          <StudentDash />
-        </Route>
-        <Route path="/lessonStaff">
-          <StaffLesson />
-        </Route>
-      </Switch>
-    </Router>
+    <div className="bg-gray-50 h-screen">
+      <Router>
+        <Switch>
+          <Route path="/inbox">
+            <Inbox />
+          </Route>
+          <Route path="/settings">
+            <Settings />
+          </Route>
+          <Route path="/createlesson">
+            <CreateLesson />
+          </Route>
+          <Route path="/createassignment">
+            <CreateAssignment />
+          </Route>
+          <Route path="/studentlesson">
+            <StudentLesson />
+          </Route>
+          <Route path="/login">
+            <Login />
+          </Route>
+          <Route path="/dashStaff">
+            <StaffDash />
+          </Route>
+          <Route path="/dashStudent">
+            <StudentDash />
+          </Route>
+          <Route path="/lessonStaff">
+            <StaffLesson />
+          </Route>
+        </Switch>
+      </Router>
+    </div>
   );
 }
 
