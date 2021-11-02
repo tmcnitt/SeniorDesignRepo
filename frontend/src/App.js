@@ -14,7 +14,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 function App() {
   return (
-    <div className="bg-gray-50 h-screen">
+    <div className="bg-gray-50 min-h-screen">
       <Router>
         <Switch>
           <Route path="/inbox">
