@@ -4,6 +4,8 @@ import Inbox from './Inbox'
 import Settings from './Settings'
 import Login from './Login'
 import StaffDash from './StaffDashboard'
+import StudentDash from './StudentDash'
+import StaffLesson from './StaffLesson'
 
 import {
   BrowserRouter as Router,
@@ -28,6 +30,12 @@ function App() {
         </Route>
         <Route path="/dashStaff">
           <StaffDash />
+        </Route>
+        <Route path="/dashStudent">
+          <StudentDash />
+        </Route>
+        <Route path="/lessonStaff">
+          <StaffLesson />
         </Route>
       </Switch>
     </Router>
