@@ -456,7 +456,7 @@ export default function Example() {
                         <section aria-labelledby="timeline-title" className="lg:col-start-3 lg:col-span-1">
                             <div className="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
                                 <h2 id="timeline-title" className="text-lg font-medium text-gray-900">
-                                    Module 2:
+                                    Lessons:
                                 </h2>
 
                                 {/* Activity Feed */}
@@ -500,14 +500,6 @@ export default function Example() {
                                             </li>
                                         ))}
                                     </ul>
-                                </div>
-                                <div className="mt-6 flex flex-col justify-stretch">
-                                    <button
-                                        type="button"
-                                        className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-400 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                                    >
-                                        Edit Module
-                                    </button>
                                 </div>
                             </div>
                         </section>

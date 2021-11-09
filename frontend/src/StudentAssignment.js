@@ -321,7 +321,7 @@ export default function Example() {
           {/* Page header */}
           <div className="max-w-3xl mx-auto px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
             <div className="flex items-center space-x-5">
-              <h1 className="text-2xl font-bold text-gray-900">Lesson 1</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Assignment 1</h1>
             </div>
           </div>
 
@@ -335,56 +335,85 @@ export default function Example() {
                       id="applicant-information-title"
                       className="text-lg leading-6 font-medium text-gray-900"
                     >
-                      Lesson Title
+                      Assignment Title
                     </h2>
                   </div>
                   <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
                     <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
                       <div className="sm:col-span-2">
-                        <p className="mt-1 text-sm text-gray-900">
-                          Fugiat ipsum ipsum deserunt culpa aute sint do nostrud
-                          anim incididunt cillum culpa consequat. Excepteur qui
-                          ipsum aliquip consequat sint. Sit id mollit nulla
-                          mollit nostrud in ea officia proident. Irure nostrud
-                          pariatur mollit ad adipisicing reprehenderit deserunt
-                          qui eu.
-                        </p>
-                      </div>
-                      <div className="sm:col-span-2">
-                        <dt className="text-sm font-medium text-gray-500">
-                          Attachments
-                        </dt>
-                        <dd className="mt-1 text-sm text-gray-900">
-                          <ul
-                            role="list"
-                            className="border border-gray-200 rounded-md divide-y divide-gray-200"
-                          >
-                            {attachments.map((attachment) => (
-                              <li
-                                key={attachment.name}
-                                className="pl-3 pr-4 py-3 flex items-center justify-between text-sm"
-                              >
-                                <div className="w-0 flex-1 flex items-center">
-                                  <PaperClipIcon
-                                    className="flex-shrink-0 h-5 w-5 text-gray-400"
-                                    aria-hidden="true"
-                                  />
-                                  <span className="ml-2 flex-1 w-0 truncate">
-                                    {attachment.name}
-                                  </span>
-                                </div>
-                                <div className="ml-4 flex-shrink-0">
-                                  <a
-                                    href={attachment.href}
-                                    className="font-medium text-blue-600 hover:text-blue-500"
-                                  >
-                                    Download
-                                  </a>
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
-                        </dd>
+                        
+
+        <div className="bg-white shadow sm:rounded-lg">
+            <div className="px-4 py-5 sm:p-6">
+                <h3 className="text-lg leading-6 font-medium text-gray-900">Question 1</h3>
+                <div className="mt-2 max-w-xl text-sm text-gray-500">
+                    <p>Example question text.</p>
+                </div>
+                <form className="mt-5 sm:flex sm:items-center">
+                    <div className="w-full ">
+                        <label htmlFor="text" className="sr-only">
+                            Email
+                        </label>
+                        <input
+                            type="text"
+                            name="email"
+                            id="email"
+                            className="pb-10 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                            placeholder="Your text here."
+                        />
+                    </div>
+                </form>
+            </div>
+            <div className="px-4 py-5 sm:p-6">
+                <h3 className="text-lg leading-6 font-medium text-gray-900">Question 2</h3>
+                <div className="mt-2 max-w-xl text-sm text-gray-500">
+                    <p>Example question text.</p>
+                </div>
+                <form className="mt-5 sm:flex sm:items-center">
+                    <div className="w-full">
+                        <label htmlFor="text" className="sr-only">
+                            Email
+                        </label>
+                        <input
+                            type="text"
+                            name="email"
+                            id="email"
+                            className="pb-10 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                            placeholder="Your text here."
+                        />
+                    </div>
+                </form>
+            </div>
+            <div className="px-4 py-5 sm:p-6">
+                <h3 className="text-lg leading-6 font-medium text-gray-900">Question 3</h3>
+                <div className="mt-2 max-w-xl text-sm text-gray-500">
+                    <p>Example question text.</p>
+                </div>
+                <form className="mt-5 sm:flex sm:items-center">
+                    <div className="w-full">
+                        <label htmlFor="text" className="sr-only">
+                            Email
+                        </label>
+                        <input
+                            type="text"
+                            name="email"
+                            id="email"
+                            className="pb-10 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                            placeholder="Your text here."
+                        />
+                    </div>
+                </form>
+            <div className="sm:p-6">
+                <button
+                    type="submit"
+                    className="mt-5 w-full px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 "
+                >
+                    Submit
+                </button>
+            </div>
+            </div>
+        </div>
+
                       </div>
                     </dl>
                   </div>
@@ -507,7 +536,7 @@ export default function Example() {
                   id="timeline-title"
                   className="text-lg font-medium text-gray-900"
                 >
-                  Lessons:
+                  Lessons
                 </h2>
 
                 {/* Activity Feed */}

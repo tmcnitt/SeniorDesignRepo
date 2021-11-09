@@ -9,6 +9,7 @@ import Login from './Login'
 import StaffDash from './StaffDashboard'
 import StudentDash from './StudentDash'
 import StaffLesson from './StaffLesson'
+import StudentAssignment from './StudentAssignment'
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
@@ -23,13 +24,13 @@ function App() {
           <Route path="/settings">
             <Settings />
           </Route>
-          <Route path="/createlesson">
+          <Route path="/createLesson">
             <CreateLesson />
           </Route>
-          <Route path="/createassignment">
+          <Route path="/createAssignment">
             <CreateAssignment />
           </Route>
-          <Route path="/studentlesson">
+          <Route path="/lessonStudent">
             <StudentLesson />
           </Route>
           <Route path="/login">
@@ -43,6 +44,9 @@ function App() {
           </Route>
           <Route path="/lessonStaff">
             <StaffLesson />
+          </Route>
+          <Route path="/assignmentStudent">
+            <StudentAssignment />
           </Route>
         </Switch>
       </Router>

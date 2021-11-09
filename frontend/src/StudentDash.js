@@ -31,39 +31,39 @@ const userNavigation = [
   { name: 'Sign out', href: '#' },
 ]
 const stats = [
-  { label: 'Modules Left', value: 12 },
-  { label: 'Modules Completed', value: 4 }
+  { label: 'Lessons Left', value: 12 },
+  { label: 'Lessons Completed', value: 4 }
 ]
 const actions = [
   {
     icon: CheckCircleIcon,
-    name: 'Module 1',
+    name: 'Lesson 1',
     href: '#'
   },
   {
     icon: MinusCircleIcon,
-    name: 'Module 2',
+    name: 'Lesson 2',
     href: '#',
     iconForeground: 'text-red-500'
   },
   {
     icon: CheckCircleIcon,
-    name: 'Module 3',
+    name: 'Lesson 3',
     href: '#'
   },
   { icon: CheckCircleIcon, 
-    name: 'Module 4', 
+    name: 'Lesson 4', 
     href: '#'
   },
   {
     icon: MinusCircleIcon,
-    name: 'Module 5',
+    name: 'Lesson 5',
     href: '#',
     iconForeground: 'text-red-500'
   },
   {
     icon: MinusCircleIcon,
-    name: 'Module 6',
+    name: 'Lesson 6',
     href: '#',
     iconForeground: 'text-red-500'
   },
