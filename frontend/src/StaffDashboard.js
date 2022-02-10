@@ -12,6 +12,8 @@ import {
   XIcon,
 } from '@heroicons/react/outline'
 import { CheckCircleIcon, ClipboardCheckIcon, ClipboardListIcon, InboxIcon, MinusCircleIcon, SearchIcon } from '@heroicons/react/solid'
+import React from 'react'
+import { AccountsRepository } from './api/AccountsRepository'
 
 const user = {
   name: 'Staff',
@@ -95,8 +97,51 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
-  return (
+class StaffDashboard extends React.Component {
+  accountRepo = new AccountsRepository();
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      studentEmail: '',
+      studentName: '',
+      staffEmail: '',
+      staffName: ''
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleStudentSubmit = this.handleStudentSubmit.bind(this);
+    this.handleStaffSubmit = this.handleStaffSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+    this.setState({[name]: value});
+  }
+
+  handleStudentSubmit(event) {
+    alert(`Created account for ${this.state.studentName} with email ${this.state.studentEmail}. Default password: 123`);
+    // this.accountRepo.addStudent(this.state.studentEmail, this.state.studentName, '123');
+    this.setState({
+      studentEmail: '',
+      studentName: ''
+    });
+    event.preventDefault();
+  }
+
+  handleStaffSubmit(event) {
+    alert(`Created account for ${this.state.staffName} with email ${this.state.staffEmail}. Default password: 123`);
+    this.accountRepo.addStaff(this.state.staffEmail, this.state.staffName, '123');
+    this.setState({
+      staffEmail: '',
+      staffName: ''
+    });
+    event.preventDefault();
+  }
+
+  render() {
+    return(
     <>
       {/*
         This example requires updating your template:
@@ -454,6 +499,126 @@ export default function Example() {
                     </div>
                   </div>
                 </section>
+                <section aria-labelledby="add-new-student">
+                  <div className="rounded-lg bg-white overflow-hidden shadow">
+                    <div className="p-6">
+                      <h2 className="text-base font-medium text-gray-900" id="add-new-student">
+                        Add new Student
+                      </h2>
+                      <div className="flow-root mt-6">
+                      <label
+                        htmlFor="studentEmail"
+                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                      >
+                      Student Email
+                      </label>
+                      <div className="mt-1 sm:mt-0 sm:col-span-2">
+                        <div className="max-w-lg flex rounded-md shadow-sm">
+                          <input
+                            type="text"
+                            name="studentEmail"
+                            id="studentEmail"
+                            autoComplete="studentEmail"
+                            value={this.state.studentEmail}
+                            className="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                            onChange={this.handleChange}
+                          />
+                        </div>
+                        </div>
+                      <label
+                      htmlFor="studentName"
+                      className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                      >
+                      Student Name
+                      </label>
+                      <div className="mt-1 sm:mt-0 sm:col-span-2">
+                        <div className="max-w-lg flex rounded-md shadow-sm">
+                          <input
+                            type="text"
+                            name="studentName"
+                            id="studentName"
+                            autoComplete="studentName"
+                            value={this.state.studentName}
+                            className="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                            onChange={this.handleChange}
+                          />
+                        </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="pt-5">
+                      <div className="flex justify-end">
+                        <button
+                          type="submit"
+                          className="mx-3 mb-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          onClick={this.handleStudentSubmit}
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <section aria-labelledby="add-new-staff">
+                  <div className="rounded-lg bg-white overflow-hidden shadow">
+                    <div className="p-6">
+                      <h2 className="text-base font-medium text-gray-900" id="add-new-staff">
+                        Add new Staff
+                      </h2>
+                      <div className="flow-root mt-6">
+                      <label
+                        htmlFor="staffEmail"
+                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                      >
+                      Staff Email
+                      </label>
+                      <div className="mt-1 sm:mt-0 sm:col-span-2">
+                        <div className="max-w-lg flex rounded-md shadow-sm">
+                          <input
+                            type="text"
+                            name="staffEmail"
+                            id="staffEmail"
+                            autoComplete="staffEmail"
+                            value={this.state.staffEmail}
+                            className="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                            onChange={this.handleChange}
+                          />
+                        </div>
+                        </div>
+                      <label
+                      htmlFor="staffName"
+                      className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                      >
+                      Staff Name
+                      </label>
+                      <div className="mt-1 sm:mt-0 sm:col-span-2">
+                        <div className="max-w-lg flex rounded-md shadow-sm">
+                          <input
+                            type="text"
+                            name="staffName"
+                            id="staffName"
+                            autoComplete="staffName"
+                            value={this.state.staffName}
+                            className="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                            onChange={this.handleChange}
+                          />
+                        </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="pt-5">
+                      <div className="flex justify-end">
+                        <button
+                          type="submit"
+                          className="mx-3 mb-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          onClick={this.handleStaffSubmit}
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </section>
               </div>
             </div>
           </div>
@@ -467,6 +632,8 @@ export default function Example() {
           </div>
         </footer>
       </div>
-    </>
-  )
+    </>)
+  }
 }
+
+export default StaffDashboard
