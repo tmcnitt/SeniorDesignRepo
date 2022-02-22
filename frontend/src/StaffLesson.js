@@ -14,6 +14,7 @@ import {
     UserIcon,
 } from '@heroicons/react/solid'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
+import React from 'react'
 
 const user = {
     name: 'Whitney Francis',
@@ -116,7 +117,22 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
+class StaffLesson extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+        };
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+        this.setState({[name]: value});
+    }
+    
+    render(){
     return (
         <>
             {/*
@@ -509,3 +525,6 @@ export default function Example() {
         </>
     )
 }
+}
+
+export default StaffLesson

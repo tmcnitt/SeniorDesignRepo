@@ -12,6 +12,8 @@ import {
   XIcon,
 } from '@heroicons/react/outline'
 import { CheckCircleIcon, ClipboardCheckIcon, ClipboardListIcon, InboxIcon, MinusCircleIcon, SearchIcon } from '@heroicons/react/solid'
+import React from 'react'
+import { AccountsRepository } from './api/AccountsRepository'
 
 const user = {
   name: 'Student',
@@ -122,8 +124,25 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
-  return (
+class StudentDash extends React.Component {
+  accountRepo = new AccountsRepository();
+
+  constructor(props) {
+    super(props);
+    this.state = {
+    };
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+    this.setState({[name]: value});
+  }
+
+  render(){
+    return (
     <>
       {/*
         This example requires updating your template:
@@ -535,5 +554,8 @@ export default function Example() {
         </footer>
       </div>
     </>
-  )
+    )
+  }
 }
+
+export default StudentDash

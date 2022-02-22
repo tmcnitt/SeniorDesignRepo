@@ -122,7 +122,7 @@ class StaffDashboard extends React.Component {
 
   handleStudentSubmit(event) {
     alert(`Created account for ${this.state.studentName} with email ${this.state.studentEmail}. Default password: 123`);
-    // this.accountRepo.addStudent(this.state.studentEmail, this.state.studentName, '123');
+    this.accountRepo.addStudent(this.state.studentEmail, this.state.studentName, '123');
     this.setState({
       studentEmail: '',
       studentName: ''
