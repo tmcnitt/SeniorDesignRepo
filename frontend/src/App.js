@@ -10,6 +10,7 @@ import StaffDash from './StaffDashboard'
 import StudentDash from './StudentDash'
 import StaffLesson from './StaffLesson'
 import StudentAssignment from './StudentAssignment'
+import StaffAssignment from './StaffAssignment';
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
@@ -47,6 +48,9 @@ function App() {
           </Route>
           <Route path="/assignmentStudent">
             <StudentAssignment />
+          </Route>
+          <Route path="/assignmentStaff">
+            <StaffAssignment />
           </Route>
         </Switch>
       </Router>

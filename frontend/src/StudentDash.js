@@ -14,6 +14,7 @@ import {
 import { CheckCircleIcon, ClipboardCheckIcon, ClipboardListIcon, InboxIcon, MinusCircleIcon, SearchIcon } from '@heroicons/react/solid'
 import React from 'react'
 import { AccountsRepository } from './api/AccountsRepository'
+import { Link } from 'react-router-dom'
 
 const user = {
   name: 'Student',
@@ -174,13 +175,13 @@ class StudentDash extends React.Component {
 
                   {/* Right section on desktop */}
                   <div className="hidden lg:ml-4 lg:flex lg:items-center lg:py-5 lg:pr-0.5">
-                    <button
+                    <Link to="inbox"
                       type="button"
                       className="flex-shrink-0 p-1 text-cyan-200 rounded-full hover:text-white hover:bg-white hover:bg-opacity-10 focus:outline-none focus:ring-2 focus:ring-white"
                     >
                       <span className="sr-only">View notifications</span>
                       <InboxIcon className="h-6 w-6" aria-hidden="true" />
-                    </button>
+                    </Link>
 
                     {/* Profile dropdown */}
                     <Menu as="div" className="ml-4 relative flex-shrink-0">
@@ -394,12 +395,12 @@ class StudentDash extends React.Component {
                           </div>
                         </div>
                         <div className="mt-5 flex justify-center sm:mt-0">
-                          <a
+                          <Link to="settings"
                             href="#"
                             className="flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                           >
                             View profile
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -421,7 +422,7 @@ class StudentDash extends React.Component {
                       Quick links
                     </h2>
                     {actions.map((action, actionIdx) => (
-                      <div
+                      <Link to="lessonStudent"
                         key={action.name}
                         className={classNames(
                           actionIdx === 0 ? 'rounded-tl-lg rounded-tr-lg sm:rounded-tr-none' : '',
@@ -461,7 +462,7 @@ class StudentDash extends React.Component {
                         >
                           <ClipboardListIcon className="block h-6 w-6 text-gray-400" aria-hidden="true"/>
                         </span>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                 </section>

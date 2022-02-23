@@ -12,9 +12,11 @@ import {
   SearchIcon,
   ThumbUpIcon,
   UserIcon,
+  InboxIcon
 } from "@heroicons/react/solid";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import React from "react";
+import { Link } from "react-router-dom";
 
 const user = {
   name: "Whitney Francis",
@@ -246,7 +248,7 @@ class CreateAssignment extends React.Component {
                             className="ml-auto flex-shrink-0 bg-white p-1 text-gray-400 rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                           >
                             <span className="sr-only">View notifications</span>
-                            <BellIcon className="h-6 w-6" aria-hidden="true" />
+                            <InboxIcon className="h-6 w-6" aria-hidden="true" />
                           </button>
                         </div>
                         <div className="mt-3 px-2 space-y-1">
@@ -579,12 +581,12 @@ class CreateAssignment extends React.Component {
 
             <div className="pt-5">
               <div className="flex justify-end">
-                <button
+                <Link to="dashStaff"
                   type="button"
                   className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   Cancel
-                </button>
+                </Link>
                 <button
                   type="submit"
                   className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
