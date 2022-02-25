@@ -52,4 +52,20 @@ export class AccountsRepository {
                 });
         });
     }
+
+    checkLogin(username, password, scope){
+        //code 200 = success, code 422 = error
+        let params = new URLSearchParams();
+        params.append('username', username);
+        params.append('password', password);
+        params.append('scope', scope);
+        return new Promise((resolve, reject) => {
+            axios.post(`${this.url}/api/v1/login/access-token`, params)
+                .then(x => resolve(x.data))
+                .catch(error => {
+                    alert("Error getting account");
+                    reject(error);
+                });
+        })
+    }
 }
