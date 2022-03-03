@@ -12,6 +12,9 @@ import {
   XIcon,
 } from '@heroicons/react/outline'
 import { CheckCircleIcon, ClipboardCheckIcon, ClipboardListIcon, InboxIcon, MinusCircleIcon, SearchIcon } from '@heroicons/react/solid'
+import React from 'react'
+import { AccountsRepository } from './api/AccountsRepository'
+import {Link, Redirect} from 'react-router-dom'
 
 const user = {
   name: 'Staff',
@@ -33,70 +36,99 @@ const userNavigation = [
 const actions = [
   {
     icon: CheckCircleIcon,
-    name: 'Module 1',
+    name: 'Lesson 1',
     href: '#'
   },
   {
     icon: MinusCircleIcon,
-    name: 'Module 2',
+    name: 'Lesson 2',
     href: '#',
     iconForeground: 'text-red-500'
   },
   {
     icon: CheckCircleIcon,
-    name: 'Module 3',
+    name: 'Lesson 3',
     href: '#'
   },
   { icon: CheckCircleIcon, 
-    name: 'Module 4', 
+    name: 'Lesson 4', 
     href: '#'
   },
   {
     icon: MinusCircleIcon,
-    name: 'Module 5',
+    name: 'Lesson 5',
     href: '#',
     iconForeground: 'text-red-500'
   },
   {
     icon: MinusCircleIcon,
-    name: 'Module 6',
+    name: 'Lesson 6',
     href: '#',
     iconForeground: 'text-red-500'
   },
 ]
-const recentHires = [
-  {
-    name: 'Leonard Krasner',
-    imageUrl:
-      'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    href: '#',
-  },
-  {
-    name: 'Floyd Miles',
-    imageUrl:
-      'https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    href: '#',
-  },
-  {
-    name: 'Emily Selman',
-    imageUrl:
-      'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    href: '#',
-  },
-  {
-    name: 'Kristin Watson',
-    imageUrl:
-      'https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    href: '#',
-  },
-]
+
+var students = []
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
-  return (
+class StaffDashboard extends React.Component {
+  accountRepo = new AccountsRepository();
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      studentEmail: '',
+      studentName: '',
+      staffEmail: '',
+      staffName: '',
+      students: []
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleStudentSubmit = this.handleStudentSubmit.bind(this);
+    this.handleStaffSubmit = this.handleStaffSubmit.bind(this);
+    this.getStudents = this.getStudents.bind(this);
+  }
+
+  handleChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+    this.setState({[name]: value});
+  }
+
+  handleStudentSubmit(event) {
+    alert(`Created account for ${this.state.studentName} with email ${this.state.studentEmail}. Default password: 123`);
+    this.accountRepo.addStudent(this.state.studentEmail, this.state.studentName, '123');
+    this.setState({
+      studentEmail: '',
+      studentName: ''
+    });
+    event.preventDefault();
+  }
+
+  handleStaffSubmit(event) {
+    alert(`Created account for ${this.state.staffName} with email ${this.state.staffEmail}. Default password: 123`);
+    this.accountRepo.addStaff(this.state.staffEmail, this.state.staffName, '123');
+    this.setState({
+      staffEmail: '',
+      staffName: ''
+    });
+    event.preventDefault();
+  }
+
+  getStudents(event){
+    // this.accountRepo.getStaffStudents()
+    // .then(studList => {
+    //   this.setState(this.state.students = studList.data);})
+  
+    // event.preventDefault();
+  }
+
+  render() {
+    return(
     <>
       {/*
         This example requires updating your template:
@@ -127,13 +159,13 @@ export default function Example() {
 
                   {/* Right section on desktop */}
                   <div className="hidden lg:ml-4 lg:flex lg:items-center lg:py-5 lg:pr-0.5">
-                    <button
+                    <Link to="inbox"
                       type="button"
                       className="flex-shrink-0 p-1 text-cyan-200 rounded-full hover:text-white hover:bg-white hover:bg-opacity-10 focus:outline-none focus:ring-2 focus:ring-white"
                     >
                       <span className="sr-only">View notifications</span>
                       <InboxIcon className="h-6 w-6" aria-hidden="true" />
-                    </button>
+                    </Link>
 
                     {/* Profile dropdown */}
                     <Menu as="div" className="ml-4 relative flex-shrink-0">
@@ -347,18 +379,21 @@ export default function Example() {
                           </div>
                         </div>
                         <div className="mt-5 flex justify-center sm:mt-0">
-                          <a
-                            href="#"
+                          <Link
+                            to="/settings"
                             className="flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                           >
                             View profile
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     </div>
-                    <div className="border-t border-gray-200 bg-gray-50 grid grid-cols-1 divide-y divide-gray-200 sm:grid-cols-1 sm:divide-y-0 sm:divide-x">
+                    <div className="border-t border-gray-200 bg-gray-50 grid grid-cols-1 divide-y divide-gray-200 sm:grid-cols-2 sm:divide-y-0 sm:divide-x">
                         <div className="px-6 py-5 text-sm font-medium text-center">
-                          <span className="text-gray-900">Create New Module</span>
+                          <Link to="createLesson" className="text-gray-900">Create New Lesson</Link>
+                        </div>
+                        <div className="px-6 py-5 text-sm font-medium text-center">
+                          <Link to="createAssignment" className="text-gray-900">Create New Assignment</Link>
                         </div>
                     </div>
                   </div>
@@ -371,7 +406,7 @@ export default function Example() {
                       Quick links
                     </h2>
                     {actions.map((action, actionIdx) => (
-                      <div
+                      <Link to="lessonStaff"
                         key={action.name}
                         className={classNames(
                           actionIdx === 0 ? 'rounded-tl-lg rounded-tr-lg sm:rounded-tr-none' : '',
@@ -411,7 +446,7 @@ export default function Example() {
                         >
                           <ClipboardListIcon className="block h-6 w-6 text-gray-400" aria-hidden="true"/>
                         </span>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                 </section>
@@ -429,14 +464,15 @@ export default function Example() {
                       </h2>
                       <div className="flow-root mt-6">
                         <ul role="list" className="-my-5 divide-y divide-gray-200">
-                          {recentHires.map((person) => (
-                            <li key={person.name} className="py-4">
+                          {this.getStudents()}
+                          {this.state.students.map((s) => (
+                            <li key={s.full_name} className="py-4">
                               <div className="flex items-center space-x-4">
                                 <div className="flex-shrink-0">
-                                  <img className="h-8 w-8 rounded-full" src={person.imageUrl} alt="" />
+                                  <img className="h-8 w-8 rounded-full" src={s.id} alt="" />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                  <p className="text-m font-medium text-gray-900 truncate">{person.name}</p>
+                                  <p className="text-m font-medium text-gray-900 truncate">{s.full_name}</p>
                                 </div>
                               </div>
                             </li>
@@ -454,6 +490,126 @@ export default function Example() {
                     </div>
                   </div>
                 </section>
+                <section aria-labelledby="add-new-student">
+                  <div className="rounded-lg bg-white overflow-hidden shadow">
+                    <div className="p-6">
+                      <h2 className="text-base font-medium text-gray-900" id="add-new-student">
+                        Add new Student
+                      </h2>
+                      <div className="flow-root mt-6">
+                      <label
+                        htmlFor="studentEmail"
+                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                      >
+                      Student Email
+                      </label>
+                      <div className="mt-1 sm:mt-0 sm:col-span-2">
+                        <div className="max-w-lg flex rounded-md shadow-sm">
+                          <input
+                            type="text"
+                            name="studentEmail"
+                            id="studentEmail"
+                            autoComplete="studentEmail"
+                            value={this.state.studentEmail}
+                            className="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                            onChange={this.handleChange}
+                          />
+                        </div>
+                        </div>
+                      <label
+                      htmlFor="studentName"
+                      className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                      >
+                      Student Name
+                      </label>
+                      <div className="mt-1 sm:mt-0 sm:col-span-2">
+                        <div className="max-w-lg flex rounded-md shadow-sm">
+                          <input
+                            type="text"
+                            name="studentName"
+                            id="studentName"
+                            autoComplete="studentName"
+                            value={this.state.studentName}
+                            className="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                            onChange={this.handleChange}
+                          />
+                        </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="pt-5">
+                      <div className="flex justify-end">
+                        <button
+                          type="submit"
+                          className="mx-3 mb-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          onClick={this.handleStudentSubmit}
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <section aria-labelledby="add-new-staff">
+                  <div className="rounded-lg bg-white overflow-hidden shadow">
+                    <div className="p-6">
+                      <h2 className="text-base font-medium text-gray-900" id="add-new-staff">
+                        Add new Staff
+                      </h2>
+                      <div className="flow-root mt-6">
+                      <label
+                        htmlFor="staffEmail"
+                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                      >
+                      Staff Email
+                      </label>
+                      <div className="mt-1 sm:mt-0 sm:col-span-2">
+                        <div className="max-w-lg flex rounded-md shadow-sm">
+                          <input
+                            type="text"
+                            name="staffEmail"
+                            id="staffEmail"
+                            autoComplete="staffEmail"
+                            value={this.state.staffEmail}
+                            className="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                            onChange={this.handleChange}
+                          />
+                        </div>
+                        </div>
+                      <label
+                      htmlFor="staffName"
+                      className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                      >
+                      Staff Name
+                      </label>
+                      <div className="mt-1 sm:mt-0 sm:col-span-2">
+                        <div className="max-w-lg flex rounded-md shadow-sm">
+                          <input
+                            type="text"
+                            name="staffName"
+                            id="staffName"
+                            autoComplete="staffName"
+                            value={this.state.staffName}
+                            className="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                            onChange={this.handleChange}
+                          />
+                        </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="pt-5">
+                      <div className="flex justify-end">
+                        <button
+                          type="submit"
+                          className="mx-3 mb-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          onClick={this.handleStaffSubmit}
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </section>
               </div>
             </div>
           </div>
@@ -467,6 +623,8 @@ export default function Example() {
           </div>
         </footer>
       </div>
-    </>
-  )
+    </>)
+  }
 }
+
+export default StaffDashboard
