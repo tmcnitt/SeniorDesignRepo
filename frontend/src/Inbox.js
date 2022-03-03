@@ -23,6 +23,7 @@ import {
     XIcon,
 } from '@heroicons/react/outline'
 
+
 const user = {
     name: 'Whitney Francis',
     email: 'whitneyfrancis@example.com',

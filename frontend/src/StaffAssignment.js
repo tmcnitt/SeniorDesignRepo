@@ -15,6 +15,7 @@ import {
 } from "@heroicons/react/solid";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import React from "react";
+import { Link } from "react-router-dom";
 
 const user = {
   name: "Whitney Francis",
@@ -112,7 +113,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-class StudentLesson extends React.Component{
+class StaffAssignment extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -337,9 +338,17 @@ class StudentLesson extends React.Component{
           {/* Page header */}
           <div className="max-w-3xl mx-auto px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
             <div className="flex items-center space-x-5">
-              <h1 className="text-2xl font-bold text-gray-900">Lesson 1</h1>
+                <h1 className="text-2xl font-bold text-gray-900">Assignment 1</h1>
             </div>
-          </div>
+            <div className="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-reverse sm:space-y-0 sm:space-x-3 md:mt-0 md:flex-row md:space-x-3">
+                <Link to="createAssignment"
+                    type="button"
+                    className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500"
+                >
+                    Edit Assignment
+                </Link>
+            </div>
+        </div>
 
           <div className="mt-8 max-w-3xl mx-auto grid grid-cols-1 gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
             <div className="space-y-6 lg:col-start-1 lg:col-span-2">
@@ -351,56 +360,39 @@ class StudentLesson extends React.Component{
                       id="applicant-information-title"
                       className="text-lg leading-6 font-medium text-gray-900"
                     >
-                      Lesson Title
+                      Assignment Title
                     </h2>
                   </div>
                   <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
                     <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
                       <div className="sm:col-span-2">
-                        <p className="mt-1 text-sm text-gray-900">
-                          Fugiat ipsum ipsum deserunt culpa aute sint do nostrud
-                          anim incididunt cillum culpa consequat. Excepteur qui
-                          ipsum aliquip consequat sint. Sit id mollit nulla
-                          mollit nostrud in ea officia proident. Irure nostrud
-                          pariatur mollit ad adipisicing reprehenderit deserunt
-                          qui eu.
-                        </p>
-                      </div>
-                      <div className="sm:col-span-2">
-                        <dt className="text-sm font-medium text-gray-500">
-                          Attachments
-                        </dt>
-                        <dd className="mt-1 text-sm text-gray-900">
-                          <ul
-                            role="list"
-                            className="border border-gray-200 rounded-md divide-y divide-gray-200"
-                          >
-                            {attachments.map((attachment) => (
-                              <li
-                                key={attachment.name}
-                                className="pl-3 pr-4 py-3 flex items-center justify-between text-sm"
-                              >
-                                <div className="w-0 flex-1 flex items-center">
-                                  <PaperClipIcon
-                                    className="flex-shrink-0 h-5 w-5 text-gray-400"
-                                    aria-hidden="true"
-                                  />
-                                  <span className="ml-2 flex-1 w-0 truncate">
-                                    {attachment.name}
-                                  </span>
-                                </div>
-                                <div className="ml-4 flex-shrink-0">
-                                  <a
-                                    href={attachment.href}
-                                    className="font-medium text-blue-600 hover:text-blue-500"
-                                  >
-                                    Download
-                                  </a>
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
-                        </dd>
+                        
+
+        <div className="bg-white shadow sm:rounded-lg">
+            <div className="px-4 py-5 sm:p-6">
+                <h3 className="text-lg leading-6 font-medium text-gray-900">Question 1</h3>
+                <div className="mt-2 max-w-xl text-sm text-gray-500">
+                    <p>Example question text.</p>
+                </div>
+                
+            </div>
+            <div className="px-4 py-5 sm:p-6">
+                <h3 className="text-lg leading-6 font-medium text-gray-900">Question 2</h3>
+                <div className="mt-2 max-w-xl text-sm text-gray-500">
+                    <p>Example question text.</p>
+                </div>
+                
+            </div>
+            <div className="px-4 py-5 sm:p-6">
+                <h3 className="text-lg leading-6 font-medium text-gray-900">Question 3</h3>
+                <div className="mt-2 max-w-xl text-sm text-gray-500">
+                    <p>Example question text.</p>
+                </div>
+                
+            
+            </div>
+        </div>
+
                       </div>
                     </dl>
                   </div>
@@ -523,7 +515,7 @@ class StudentLesson extends React.Component{
                   id="timeline-title"
                   className="text-lg font-medium text-gray-900"
                 >
-                  Lessons:
+                  Lessons
                 </h2>
 
                 {/* Activity Feed */}
@@ -586,4 +578,4 @@ class StudentLesson extends React.Component{
 }
 }
 
-export default StudentLesson
+export default StaffAssignment

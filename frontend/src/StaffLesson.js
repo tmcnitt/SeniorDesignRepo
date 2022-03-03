@@ -14,6 +14,8 @@ import {
     UserIcon,
 } from '@heroicons/react/solid'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
+import React from 'react'
+import { Link } from 'react-router-dom'
 
 const user = {
     name: 'Whitney Francis',
@@ -116,7 +118,22 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
+class StaffLesson extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+        };
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+        this.setState({[name]: value});
+    }
+    
+    render(){
     return (
         <>
             {/*
@@ -303,12 +320,12 @@ export default function Example() {
                             <h1 className="text-2xl font-bold text-gray-900">Lesson 1</h1>
                         </div>
                         <div className="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-reverse sm:space-y-0 sm:space-x-3 md:mt-0 md:flex-row md:space-x-3">
-                            <button
+                            <Link to="createLesson"
                                 type="button"
                                 className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500"
                             >
                                 Edit Lesson
-                            </button>
+                            </Link>
                         </div>
                     </div>
 
@@ -456,7 +473,7 @@ export default function Example() {
                         <section aria-labelledby="timeline-title" className="lg:col-start-3 lg:col-span-1">
                             <div className="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
                                 <h2 id="timeline-title" className="text-lg font-medium text-gray-900">
-                                    Module 2:
+                                    Lessons:
                                 </h2>
 
                                 {/* Activity Feed */}
@@ -501,14 +518,6 @@ export default function Example() {
                                         ))}
                                     </ul>
                                 </div>
-                                <div className="mt-6 flex flex-col justify-stretch">
-                                    <button
-                                        type="button"
-                                        className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-400 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                                    >
-                                        Edit Module
-                                    </button>
-                                </div>
                             </div>
                         </section>
                     </div>
@@ -517,3 +526,6 @@ export default function Example() {
         </>
     )
 }
+}
+
+export default StaffLesson

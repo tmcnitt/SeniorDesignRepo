@@ -12,6 +12,9 @@ import {
   XIcon,
 } from '@heroicons/react/outline'
 import { CheckCircleIcon, ClipboardCheckIcon, ClipboardListIcon, InboxIcon, MinusCircleIcon, SearchIcon } from '@heroicons/react/solid'
+import React from 'react'
+import { AccountsRepository } from './api/AccountsRepository'
+import { Link } from 'react-router-dom'
 
 const user = {
   name: 'Student',
@@ -31,39 +34,39 @@ const userNavigation = [
   { name: 'Sign out', href: '#' },
 ]
 const stats = [
-  { label: 'Modules Left', value: 12 },
-  { label: 'Modules Completed', value: 4 }
+  { label: 'Lessons Left', value: 12 },
+  { label: 'Lessons Completed', value: 4 }
 ]
 const actions = [
   {
     icon: CheckCircleIcon,
-    name: 'Module 1',
+    name: 'Lesson 1',
     href: '#'
   },
   {
     icon: MinusCircleIcon,
-    name: 'Module 2',
+    name: 'Lesson 2',
     href: '#',
     iconForeground: 'text-red-500'
   },
   {
     icon: CheckCircleIcon,
-    name: 'Module 3',
+    name: 'Lesson 3',
     href: '#'
   },
   { icon: CheckCircleIcon, 
-    name: 'Module 4', 
+    name: 'Lesson 4', 
     href: '#'
   },
   {
     icon: MinusCircleIcon,
-    name: 'Module 5',
+    name: 'Lesson 5',
     href: '#',
     iconForeground: 'text-red-500'
   },
   {
     icon: MinusCircleIcon,
-    name: 'Module 6',
+    name: 'Lesson 6',
     href: '#',
     iconForeground: 'text-red-500'
   },
@@ -122,8 +125,25 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
-  return (
+class StudentDash extends React.Component {
+  accountRepo = new AccountsRepository();
+
+  constructor(props) {
+    super(props);
+    this.state = {
+    };
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+    this.setState({[name]: value});
+  }
+
+  render(){
+    return (
     <>
       {/*
         This example requires updating your template:
@@ -155,13 +175,13 @@ export default function Example() {
 
                   {/* Right section on desktop */}
                   <div className="hidden lg:ml-4 lg:flex lg:items-center lg:py-5 lg:pr-0.5">
-                    <button
+                    <Link to="inbox"
                       type="button"
                       className="flex-shrink-0 p-1 text-cyan-200 rounded-full hover:text-white hover:bg-white hover:bg-opacity-10 focus:outline-none focus:ring-2 focus:ring-white"
                     >
                       <span className="sr-only">View notifications</span>
                       <InboxIcon className="h-6 w-6" aria-hidden="true" />
-                    </button>
+                    </Link>
 
                     {/* Profile dropdown */}
                     <Menu as="div" className="ml-4 relative flex-shrink-0">
@@ -375,12 +395,12 @@ export default function Example() {
                           </div>
                         </div>
                         <div className="mt-5 flex justify-center sm:mt-0">
-                          <a
+                          <Link to="settings"
                             href="#"
                             className="flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                           >
                             View profile
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -402,7 +422,7 @@ export default function Example() {
                       Quick links
                     </h2>
                     {actions.map((action, actionIdx) => (
-                      <div
+                      <Link to="lessonStudent"
                         key={action.name}
                         className={classNames(
                           actionIdx === 0 ? 'rounded-tl-lg rounded-tr-lg sm:rounded-tr-none' : '',
@@ -442,7 +462,7 @@ export default function Example() {
                         >
                           <ClipboardListIcon className="block h-6 w-6 text-gray-400" aria-hidden="true"/>
                         </span>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                 </section>
@@ -535,5 +555,8 @@ export default function Example() {
         </footer>
       </div>
     </>
-  )
+    )
+  }
 }
+
+export default StudentDash
