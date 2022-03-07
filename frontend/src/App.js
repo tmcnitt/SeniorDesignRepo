@@ -11,6 +11,7 @@ import StudentDash from './StudentDash'
 import StaffLesson from './StaffLesson'
 import StudentAssignment from './StudentAssignment'
 import StaffAssignment from './StaffAssignment';
+import ForgotPassword from './ForgotPassword';
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
@@ -51,6 +52,9 @@ function App() {
           </Route>
           <Route path="/assignmentStaff">
             <StaffAssignment />
+          </Route>
+          <Route path="/forgot">
+            <ForgotPassword />
           </Route>
         </Switch>
       </Router>
