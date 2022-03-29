@@ -16,6 +16,7 @@ import {
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import React from "react";
 import { Link } from "react-router-dom";
+import { LessonRepository } from "./api/LessonRepository";
 
 const user = {
   name: "Whitney Francis",
@@ -114,11 +115,22 @@ function classNames(...classes) {
 }
 
 class CreateLesson extends React.Component {
+  lessonRepo = new LessonRepository()
+
   constructor(props) {
     super(props);
     this.state = {
+      lesson_title: "",
+      contents: ""
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleCreate = this.handleCreate.bind(this);
+  }
+
+  handleCreate(event){
+    event.preventDefault();
+    this.lessonRepo.createLesson(this.state.lesson_title, 1, this.state.contents)
+    alert("created lesson " + this.state.lesson_title + ": " + this.state.contents)
   }
 
   handleChange(event) {
@@ -337,7 +349,7 @@ class CreateLesson extends React.Component {
                 <div className="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
                   <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                     <label
-                      htmlFor="username"
+                      htmlFor="lesson_title"
                       className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                     >
                       Lesson Title
@@ -346,16 +358,18 @@ class CreateLesson extends React.Component {
                       <div className="max-w-lg flex rounded-md shadow-sm">
                         <input
                           type="text"
-                          name="lesson-title"
-                          id="lesson-title"
-                          autoComplete="lesson-title"
+                          name="lesson_title"
+                          id="lesson_title"
+                          autoComplete="lesson_title"
+                          value={this.state.lesson_title}
                           className="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                          onChange={this.handleChange}
                         />
                       </div>
                     </div>
                   </div>
 
-                  <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                  {/* <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                     <label
                       htmlFor="about"
                       className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
@@ -374,7 +388,7 @@ class CreateLesson extends React.Component {
                         Briefly describe the goal of the lesson.
                       </p>
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
                     <div className="space-y-6 sm:space-y-5 divide-y divide-gray-200">
@@ -485,8 +499,10 @@ class CreateLesson extends React.Component {
                   rows={8}
                   className="max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border border-gray-300 rounded-md"
                   defaultValue={""}
+                  value={this.state.contents}
+                  onChange={this.handleChange}
                 />
-                <div className="space-y-6 sm:space-y-5">
+                {/* <div className="space-y-6 sm:space-y-5">
                   <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <div className="max-w-lg flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                       <div className="space-y-1 text-center">
@@ -525,7 +541,7 @@ class CreateLesson extends React.Component {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
 
@@ -540,6 +556,7 @@ class CreateLesson extends React.Component {
                 <button
                   type="submit"
                   className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  onClick={this.handleCreate}
                 >
                   Create Lesson
                 </button>

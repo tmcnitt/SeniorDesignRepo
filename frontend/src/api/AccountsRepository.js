@@ -10,11 +10,13 @@ export class AccountsRepository {
         withCredentials: true        
     };
 
+    authorization = 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDkyNjg2MTIsInN1YiI6IjEiLCJ1c2VyX3R5cGUiOiJzdGFmZiJ9.YHnpvPDQnNcWOrk-eq60YgAIcRQVBVzNtU69gcDx-50'
+    
     getStaffStudents(){
         return new Promise((resolve, reject) => {
             axios.get(`${this.url}/api/v1/staff/students`, {
                 headers: {
-                    Authorization: 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDUxNDI3NDUsInN1YiI6IjEiLCJ1c2VyX3R5cGUiOiJzdGFmZiJ9.GLmrCljO_ax3d1__cMPHQ9trjzYBmc_zEhLAxmLbY04'
+                    Authorization: this.authorization
                 }
             })
                 .then(x => resolve(x.data))
@@ -29,7 +31,7 @@ export class AccountsRepository {
         return new Promise((resolve, reject) => {
             axios.post(`${this.url}/api/v1/students`, {email, full_name, password}, {
                 headers: {
-                    Authorization: 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDUxNDI3NDUsInN1YiI6IjEiLCJ1c2VyX3R5cGUiOiJzdGFmZiJ9.GLmrCljO_ax3d1__cMPHQ9trjzYBmc_zEhLAxmLbY04'
+                    Authorization: this.authorization
                 }
             })
                 .then(x => resolve(x))
@@ -43,7 +45,7 @@ export class AccountsRepository {
         return new Promise((resolve, reject) => {
             axios.post(`${this.url}/api/v1/staff`, {email, full_name, password}, {
                 headers: {
-                    Authorization: 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDUxNDI3NDUsInN1YiI6IjEiLCJ1c2VyX3R5cGUiOiJzdGFmZiJ9.GLmrCljO_ax3d1__cMPHQ9trjzYBmc_zEhLAxmLbY04'
+                    Authorization: this.authorization
                 }
             })
                 .then(x => resolve(x))

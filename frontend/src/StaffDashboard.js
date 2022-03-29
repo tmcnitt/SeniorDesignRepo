@@ -14,6 +14,7 @@ import {
 import { CheckCircleIcon, ClipboardCheckIcon, ClipboardListIcon, InboxIcon, MinusCircleIcon, SearchIcon } from '@heroicons/react/solid'
 import React from 'react'
 import { AccountsRepository } from './api/AccountsRepository'
+import { LessonRepository } from './api/LessonRepository'
 import {Link, Redirect} from 'react-router-dom'
 
 const user = {
@@ -100,6 +101,7 @@ function classNames(...classes) {
 
 class StaffDashboard extends React.Component {
   accountRepo = new AccountsRepository();
+  lessonRepo = new LessonRepository();
 
   constructor(props) {
     super(props);
@@ -112,6 +114,12 @@ class StaffDashboard extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleStudentSubmit = this.handleStudentSubmit.bind(this);
     this.handleStaffSubmit = this.handleStaffSubmit.bind(this);
+    this.getLessons = this.getLessons.bind(this);
+  }
+
+  getLessons(){
+    this.lessonRepo.getLessons()
+    alert("got lessons")
   }
 
   handleChange(event) {
@@ -421,6 +429,7 @@ class StaffDashboard extends React.Component {
                     </h2>
                     {actions.map((action, actionIdx) => (
                       <Link to="lessonStaff"
+                        onClick={this.getLessons}
                         key={action.name}
                         className={classNames(
                           actionIdx === 0 ? 'rounded-tl-lg rounded-tr-lg sm:rounded-tr-none' : '',
