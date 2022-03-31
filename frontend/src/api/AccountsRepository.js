@@ -65,7 +65,6 @@ export class AccountsRepository {
             axios.post(`${this.url}/api/v1/login/access-token`, params)
                 .then(x => resolve(x.data))
                 .catch(error => {
-                    alert("Error getting account");
                     reject(error);
                 });
         })
