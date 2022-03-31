@@ -356,7 +356,7 @@ class StaffDashboard extends React.Component {
                       Quick links
                     </h2>
                     {this.state.cards.map((card, cardInd) => (
-                      <Link to="lessonStaff"
+                      <Link to={"lessonStaff/" + card.id}
                         key={card.name}
                         className={classNames(
                           cardInd === 0 ? 'rounded-tl-lg rounded-tr-lg sm:rounded-tr-none' : '',
@@ -565,7 +565,7 @@ class StaffDashboard extends React.Component {
     let tempCards = [];
     this.lessonRepo.getLessons().then(x =>{
       x.forEach(data =>{
-        tempCards.push({name: data.title, href: "#", body: data.content})
+        tempCards.push({name: data.title, href: "#", body: data.content, id: data.id})
       })
       this.setState({cards: tempCards})
     })

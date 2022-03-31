@@ -15,7 +15,7 @@ import {
 } from '@heroicons/react/solid'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 const user = {
     name: 'Whitney Francis',
@@ -348,7 +348,7 @@ class StaffLesson extends React.Component {
                                                     proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.
                                                 </p>
                                             </div>
-                                            <div className="sm:col-span-2">
+                                            {/* <div className="sm:col-span-2">
                                                 <dt className="text-sm font-medium text-gray-500">Attachments</dt>
                                                 <dd className="mt-1 text-sm text-gray-900">
                                                     <ul role="list" className="border border-gray-200 rounded-md divide-y divide-gray-200">
@@ -370,7 +370,7 @@ class StaffLesson extends React.Component {
                                                         ))}
                                                     </ul>
                                                 </dd>
-                                            </div>
+                                            </div> */}
                                         </dl>
                                     </div>
                                 </div>
