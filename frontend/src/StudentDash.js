@@ -15,6 +15,7 @@ import { CheckCircleIcon, ClipboardCheckIcon, ClipboardListIcon, InboxIcon, Minu
 import React from 'react'
 import { AccountsRepository } from './api/AccountsRepository'
 import { Link } from 'react-router-dom'
+import { AppContext } from './AppContext'
 
 const user = {
   name: 'Student',
@@ -126,7 +127,6 @@ function classNames(...classes) {
 }
 
 class StudentDash extends React.Component {
-  accountRepo = new AccountsRepository();
 
   constructor(props) {
     super(props);
@@ -140,6 +140,11 @@ class StudentDash extends React.Component {
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
     this.setState({[name]: value});
+  }
+
+  componentDidMount(){
+    const token = this.context.JWT
+    this.accountRepo = new AccountsRepository(token);
   }
 
   render(){
@@ -558,5 +563,7 @@ class StudentDash extends React.Component {
     )
   }
 }
+
+StudentDash.contextType = AppContext;
 
 export default StudentDash

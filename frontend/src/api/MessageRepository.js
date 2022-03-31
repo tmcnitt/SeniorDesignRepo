@@ -6,6 +6,10 @@ export class MessageRepository {
 
     url = 'http://ec2-54-176-1-242.us-west-1.compute.amazonaws.com';
 
+    constructor(authorization) {
+        this.authorization = authorization;
+    }
+
     config = {
         withCredentials: true        
     };
@@ -14,7 +18,7 @@ export class MessageRepository {
         return new Promise((resolve, reject) => {
             axios.get(`${this.url}/api/v1/messages/`, {
                 headers: {
-                    Authorization: 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDUxNDI3NDUsInN1YiI6IjEiLCJ1c2VyX3R5cGUiOiJzdGFmZiJ9.GLmrCljO_ax3d1__cMPHQ9trjzYBmc_zEhLAxmLbY04'
+                    Authorization: this.authorization
                 }
             })
                 .then(x => resolve(x.data))
@@ -29,7 +33,7 @@ export class MessageRepository {
         return new Promise((resolve, reject) => {
             axios.get(`${this.url}/api/v1/messages/sent`, {
                 headers: {
-                    Authorization: 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDUxNDI3NDUsInN1YiI6IjEiLCJ1c2VyX3R5cGUiOiJzdGFmZiJ9.GLmrCljO_ax3d1__cMPHQ9trjzYBmc_zEhLAxmLbY04'
+                    Authorization: this.authorization
                 }
             })
                 .then(x => resolve(x.data))
@@ -44,7 +48,7 @@ export class MessageRepository {
         return new Promise((resolve, reject) => {
             axios.post(`${this.url}/api/v1/messages`, {message, to_user_type, to_user_id}, {
                 headers: {
-                    Authorization: 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDUxNDI3NDUsInN1YiI6IjEiLCJ1c2VyX3R5cGUiOiJzdGFmZiJ9.GLmrCljO_ax3d1__cMPHQ9trjzYBmc_zEhLAxmLbY04'
+                    Authorization: this.authorization
                 }
             })
                 .then(x => resolve(x))

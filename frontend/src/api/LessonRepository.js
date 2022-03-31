@@ -5,8 +5,10 @@ axios.defaults.withCredentials = true;
 export class LessonRepository {
     url = 'http://ec2-54-176-1-242.us-west-1.compute.amazonaws.com';
 
-    authorization = 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDkyNjg2MTIsInN1YiI6IjEiLCJ1c2VyX3R5cGUiOiJzdGFmZiJ9.YHnpvPDQnNcWOrk-eq60YgAIcRQVBVzNtU69gcDx-50'
-
+    constructor(authorization) {
+        this.authorization = authorization;
+    }
+    
     config = {
         withCredentials: true        
     };

@@ -22,6 +22,7 @@ import {
     UserCircleIcon,
     XIcon,
 } from '@heroicons/react/outline'
+import { Navbar } from './Navbar'
 
 
 const user = {
@@ -203,32 +204,9 @@ export default function Example() {
 
     return (
         <>
-            {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-gray-100">
-        <body class="h-full overflow-hidden">
-        ```
-      */}
             <div className="h-full flex flex-col p">
                 {/* Top nav*/}
-                <header className="flex-shrink-0 relative h-16 lg:bg-gray-800  flex items-center">
-                    {/* Logo area */}
-                    <div className="absolute inset-y-0 left-0 lg:static lg:flex-shrink-0">
-                        <a
-                            href="#"
-                            className="flex items-center justify-center h-16 w-16 bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-600 lg:w-20"
-                        >
-                            <img
-                                className="h-8 w-auto"
-                                src="https://tailwindui.com/img/logos/workflow-mark.svg?color=white"
-                                alt="Workflow"
-                            />
-                        </a>
-                    </div>
-
-                </header>
+                <Navbar />
 
                 {/* Bottom section */}
                 <div className="min-h-0 pl-2 pr-2 flex-1 flex overflow-hidden">

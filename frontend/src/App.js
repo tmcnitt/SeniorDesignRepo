@@ -15,50 +15,70 @@ import ForgotPassword from './ForgotPassword';
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
+import { useEffect } from 'react';
+import { AppContext, useProvideAppContext, setupLogin } from "./AppContext.js";
+import { PrivateRoute } from './PrivateRoute.js'
+
 function App() {
+  let context = useProvideAppContext();
+
+  useEffect(() => {
+    setupLogin(context);
+  }, [])
+
+  if (!context.setup) {
+    return <div></div>
+  }
+
+  const signout = () => {
+    context.signout()
+  }
+
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <Router>
-        <Switch>
-          <Route path="/inbox">
-            <Inbox />
-          </Route>
-          <Route path="/settings">
-            <Settings />
-          </Route>
-          <Route path="/createLesson">
-            <CreateLesson />
-          </Route>
-          <Route path="/createAssignment">
-            <CreateAssignment />
-          </Route>
-          <Route path="/lessonStudent">
-            <StudentLesson />
-          </Route>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <Route path="/dashStaff">
-            <StaffDash />
-          </Route>
-          <Route path="/dashStudent">
-            <StudentDash />
-          </Route>
-          <Route path="/lessonStaff/:lessonid">
-            <StaffLesson />
-          </Route>
-          <Route path="/assignmentStudent">
-            <StudentAssignment />
-          </Route>
-          <Route path="/assignmentStaff">
-            <StaffAssignment />
-          </Route>
-          <Route path="/forgot">
-            <ForgotPassword />
-          </Route>
-        </Switch>
-      </Router>
-    </div>
+    <AppContext.Provider value={context}>
+      <div className="bg-gray-50 min-h-screen">
+        <Router>
+          <Switch>
+            <Route path="/login">
+              <Login />
+            </Route>
+            <Route path="/forgot">
+              <ForgotPassword />
+            </Route>
+            <PrivateRoute path="/inbox">
+              <Inbox />
+            </PrivateRoute>
+            <PrivateRoute path="/settings">
+              <Settings />
+            </PrivateRoute>
+            <PrivateRoute path="/createLesson">
+              <CreateLesson />
+            </PrivateRoute>
+            <PrivateRoute path="/createAssignment">
+              <CreateAssignment />
+            </PrivateRoute>
+            <PrivateRoute path="/lessonStudent">
+              <StudentLesson />
+            </PrivateRoute>
+            <PrivateRoute path="/dashStaff">
+              <StaffDash />
+            </PrivateRoute>
+            <PrivateRoute path="/dashStudent">
+              <StudentDash />
+            </PrivateRoute>
+            <PrivateRoute path="/lessonStaff/:lessonid">
+              <StaffLesson />
+            </PrivateRoute>
+            <PrivateRoute path="/assignmentStudent">
+              <StudentAssignment />
+            </PrivateRoute>
+            <PrivateRoute path="/assignmentStaff">
+              <StaffAssignment />
+            </PrivateRoute>
+          </Switch>
+        </Router>
+      </div>
+    </AppContext.Provider>
   );
 }
 

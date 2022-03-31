@@ -4,6 +4,7 @@ import { AccountsRepository } from './api/AccountsRepository'
 import logo from './assets/mta.png'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router-dom' 
+import { AppContext } from './AppContext'
 
 class Login extends React.Component {
 
@@ -38,17 +39,25 @@ class Login extends React.Component {
     //call controller
     this.accountRepo.checkLogin(this.state.inputUser, this.state.inputPassword, this.state.scope)
     .then(value => {
-      // fulfillment
-      if(this.state.scope == 'student'){
-        this.setState({
-          redirectStudent: true
-        })
-      }
-      else if(this.state.scope == 'staff'){
-        this.setState({
-          redirectStaff: true
-        })
-      }
+      this.context.setJWT(value)
+      localStorage.setItem("jwt", value)
+
+      this.accountRepo.checkToken(value).then((user) => {
+        this.context.setUser(user)
+        
+        // fulfillment
+        if(this.state.scope == 'student'){
+          this.setState({
+            redirectStudent: true
+          })
+        } else if(this.state.scope == 'staff'){
+          this.setState({
+            redirectStaff: true
+          })
+        }
+      })
+
+     
     }, reason => {
       // rejection
       //display failed login error message
@@ -179,5 +188,8 @@ class Login extends React.Component {
     )
   }
 }
+
+Login.contextType = AppContext;
+
 
 export default Login
