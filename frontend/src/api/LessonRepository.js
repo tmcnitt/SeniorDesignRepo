@@ -20,7 +20,6 @@ export class LessonRepository {
             })
             .then(x => resolve(x.data))
             .catch(error => {
-                alert("error getting lessons");
                 reject(error)
             });
         })
@@ -35,7 +34,6 @@ export class LessonRepository {
             })
             .then(x => resolve(x.data))
             .catch(error => {
-                alert("error creating lessons");
                 reject(error)
             });
         })
@@ -50,7 +48,6 @@ export class LessonRepository {
             })
             .then(x => resolve(x.data))
             .catch(error => {
-                alert("error updating lessons");
                 reject(error)
             });
         })
@@ -65,7 +62,6 @@ export class LessonRepository {
             })
             .then(x => resolve(x.data))
             .catch(error => {
-                alert("error deleting lesson");
                 reject(error)
             });
         })
@@ -80,7 +76,6 @@ export class LessonRepository {
             })
             .then(x => resolve(x.data))
             .catch(error => {
-                alert("error getting lesson students");
                 reject(error)
             });
         })
@@ -95,7 +90,6 @@ export class LessonRepository {
             })
             .then(x => resolve(x.data))
             .catch(error => {
-                alert("error adding student to lesson");
                 reject(error)
             });
         })
@@ -116,7 +110,7 @@ export class LessonRepository {
         })
     }
 
-    deleteLesson(lessonID, studentID){
+    deleteLessonStudent(lessonID, studentID){
         return new Promise((resolve, reject) =>{
             axios.delete(`${this.url}/api/v1/lessons/${lessonID}/students/${studentID}`, {
                 headers:{

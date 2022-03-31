@@ -15,8 +15,9 @@ import {
 } from "@heroicons/react/solid";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { LessonRepository } from "./api/LessonRepository";
+import { AccountsRepository } from "./api/AccountsRepository"
 
 const user = {
   name: "Whitney Francis",
@@ -24,91 +25,20 @@ const user = {
   imageUrl:
     "https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80",
 };
+
 const navigation = [
   { name: "Dashboard", href: "#" },
   { name: "Students", href: "#" },
   { name: "Staff", href: "#" },
 ];
+
 const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
+  { name: "Settings", href: "/settings" },
+  { name: "Sign out", href: "/login" },
 ];
+
 const attachments = [{ name: "example_attachement.pdf", href: "#" }];
-const eventTypes = {
-  lessonComplete: { icon: BookOpenIcon, bgColorClass: "bg-gray-300" },
-  assignmentComplete: { icon: PencilAltIcon, bgColorClass: "bg-gray-300" },
-  lessonIncomplete: { icon: BookOpenIcon, bgColorClass: "bg-black" },
-  assignmentIncomplete: { icon: PencilAltIcon, bgColorClass: "bg-black" },
-  applied: { icon: UserIcon, bgColorClass: "bg-gray-400" },
-  advanced: { icon: ThumbUpIcon, bgColorClass: "bg-blue-500" },
-  completed: { icon: CheckIcon, bgColorClass: "bg-green-500" },
-};
-const timeline = [
-  {
-    id: 1,
-    type: eventTypes.lessonComplete,
-    content: "Lesson 1",
-    target: "Lesson Title",
-    date: "Sep 20",
-    datetime: "2020-09-20",
-  },
-  {
-    id: 2,
-    type: eventTypes.assignmentComplete,
-    content: "Assignment 1",
-    target: "Assignment Title",
-    date: "Sep 22",
-    datetime: "2020-09-22",
-  },
-  {
-    id: 3,
-    type: eventTypes.lessonComplete,
-    content: "Lesson 2",
-    target: "Lesson Title",
-    date: "Sep 28",
-    datetime: "2020-09-28",
-  },
-  {
-    id: 4,
-    type: eventTypes.assignmentComplete,
-    content: "Assignment 2",
-    target: "Assignment Title",
-    date: "Sep 30",
-    datetime: "2020-09-30",
-  },
-  {
-    id: 5,
-    type: eventTypes.lessonComplete,
-    content: "Lesson 3",
-    target: "Lesson Title",
-    date: "Oct 4",
-    datetime: "2020-10-04",
-  },
-];
-const comments = [
-  {
-    id: 1,
-    name: "Leslie Alexander",
-    date: "4d ago",
-    imageId: "1494790108377-be9c29b29330",
-    body: "Ducimus quas delectus ad maxime totam doloribus reiciendis ex. Tempore dolorem maiores. Similique voluptatibus tempore non ut.",
-  },
-  {
-    id: 2,
-    name: "Michael Foster",
-    date: "4d ago",
-    imageId: "1519244703995-f4e0f30006d5",
-    body: "Et ut autem. Voluptatem eum dolores sint necessitatibus quos. Quis eum qui dolorem accusantium voluptas voluptatem ipsum. Quo facere iusto quia accusamus veniam id explicabo et aut.",
-  },
-  {
-    id: 3,
-    name: "Dries Vincent",
-    date: "4d ago",
-    imageId: "1506794778202-cad84cf45f1d",
-    body: "Expedita consequatur sit ea voluptas quo ipsam recusandae. Ab sint et voluptatem repudiandae voluptatem et eveniet. Nihil quas consequatur autem. Perferendis rerum et.",
-  },
-];
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -116,12 +46,15 @@ function classNames(...classes) {
 
 class CreateLesson extends React.Component {
   lessonRepo = new LessonRepository()
+  accountRepo = new AccountsRepository();
 
   constructor(props) {
     super(props);
     this.state = {
       lesson_title: "",
-      contents: ""
+      contents: "",
+      AssignToMyStudents: false,
+      dateTime: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleCreate = this.handleCreate.bind(this);
@@ -129,8 +62,15 @@ class CreateLesson extends React.Component {
 
   handleCreate(event){
     event.preventDefault();
-    this.lessonRepo.createLesson(this.state.lesson_title, 1, this.state.contents)
-    alert("created lesson " + this.state.lesson_title + ": " + this.state.contents)
+    this.lessonRepo.createLesson(this.state.lesson_title, 1, this.state.contents).then(lessonData =>{
+      if(this.state.AssignToMyStudents === true){
+        let id = lessonData.id
+        this.accountRepo.getStaffStudents().then(students =>{
+          students.forEach(student => {
+            this.lessonRepo.addLessonStudents(id, this.state.dateTime, student.id)
+          })
+      })}
+    })
   }
 
   handleChange(event) {
@@ -408,6 +348,7 @@ class CreateLesson extends React.Component {
                                 <div className="relative flex items-start">
                                   <div className="flex items-center h-5">
                                     <input
+                                      onChange={this.handleChange}
                                       id="AssignToMyStudents"
                                       name="AssignToMyStudents"
                                       type="checkbox"
@@ -416,7 +357,7 @@ class CreateLesson extends React.Component {
                                   </div>
                                   <div className="ml-3 text-sm">
                                     <label
-                                      htmlFor="myStudents"
+                                      htmlFor="AssignToMyStudents"
                                       className="font-medium text-gray-700"
                                     >
                                       Assign To My Students
@@ -427,7 +368,7 @@ class CreateLesson extends React.Component {
                                     </p>
                                   </div>
                                 </div>
-                                <div>
+                                {/* <div>
                                   <div className="relative flex items-start">
                                     <div className="flex items-center h-5">
                                       <input
@@ -473,7 +414,7 @@ class CreateLesson extends React.Component {
                                       </p>
                                     </div>
                                   </div>
-                                </div>
+                                </div> */}
                               </div>
                             </div>
                           </div>
@@ -483,6 +424,36 @@ class CreateLesson extends React.Component {
                   </div>
                 </div>
               </div>
+
+              <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
+                    <div className="space-y-6 sm:space-y-5 divide-y divide-gray-200">
+                      <div className="pt-6 sm:pt-5">
+                        <div role="group" aria-labelledby="label-assign">
+                          <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-baseline">
+                            <div>
+                              <label
+                                htmlFor="dateTime"
+                                className="text-base font-medium text-gray-900 sm:text-sm sm:text-gray-700"
+                                id="label-assign"
+                              >
+                               Due Date: 
+                              </label>
+                            </div>
+                            <div className="mt-4 sm:mt-0 sm:col-span-2">
+                              <div className="max-w-lg space-y-4">
+                                <div className="relative flex items-start">
+                                  <div className="flex items-center h-5">
+                                    <input type="datetime-local" id="dateTime" name="dateTime" onChange={this.handleChange}/>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
 
               <div className="pt-8 space-y-6 sm:pt-10 sm:space-y-5">
                 <div>

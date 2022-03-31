@@ -30,69 +30,8 @@ const navigation = [
   { name: 'Student Directory', href: '#', current: false }
 ]
 const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
-]
-const actions = [
-  {
-    icon: CheckCircleIcon,
-    name: 'Lesson 1',
-    href: '#'
-  },
-  {
-    icon: MinusCircleIcon,
-    name: 'Lesson 2',
-    href: '#',
-    iconForeground: 'text-red-500'
-  },
-  {
-    icon: CheckCircleIcon,
-    name: 'Lesson 3',
-    href: '#'
-  },
-  { icon: CheckCircleIcon, 
-    name: 'Lesson 4', 
-    href: '#'
-  },
-  {
-    icon: MinusCircleIcon,
-    name: 'Lesson 5',
-    href: '#',
-    iconForeground: 'text-red-500'
-  },
-  {
-    icon: MinusCircleIcon,
-    name: 'Lesson 6',
-    href: '#',
-    iconForeground: 'text-red-500'
-  },
-]
-const recentHires = [
-  {
-    name: 'Leonard Krasner',
-    imageUrl:
-      'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    href: '#',
-  },
-  {
-    name: 'Floyd Miles',
-    imageUrl:
-      'https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    href: '#',
-  },
-  {
-    name: 'Emily Selman',
-    imageUrl:
-      'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    href: '#',
-  },
-  {
-    name: 'Kristin Watson',
-    imageUrl:
-      'https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    href: '#',
-  },
+  { name: 'Settings', href: '/settings' },
+  { name: 'Sign out', href: '/login' },
 ]
 
 function classNames(...classes) {
@@ -109,17 +48,13 @@ class StaffDashboard extends React.Component {
       studentEmail: '',
       studentName: '',
       staffEmail: '',
-      staffName: ''
+      staffName: '',
+      cards: [],
+      students: []
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleStudentSubmit = this.handleStudentSubmit.bind(this);
     this.handleStaffSubmit = this.handleStaffSubmit.bind(this);
-    this.getLessons = this.getLessons.bind(this);
-  }
-
-  getLessons(){
-    this.lessonRepo.getLessons()
-    alert("got lessons")
   }
 
   handleChange(event) {
@@ -152,13 +87,6 @@ class StaffDashboard extends React.Component {
   render() {
     return(
     <>
-      {/*
-        This example requires updating your template:
-        ```
-        <html class="h-full bg-gray-100">
-        <body class="h-full">
-        ```
-      */}
       <div className="min-h-full">
         <Popover as="header" className="pb-24 bg-gradient-to-r from-sky-800 to-cyan-600">
           {({ open }) => (
@@ -229,7 +157,7 @@ class StaffDashboard extends React.Component {
                       {/* Left nav */}
                       <div className="hidden lg:block lg:col-span-2">
                         <nav className="flex space-x-4">
-                          {navigation.map((item) => (
+                          {/* {navigation.map((item) => (
                             <a
                               key={item.name}
                               href={item.href}
@@ -241,12 +169,12 @@ class StaffDashboard extends React.Component {
                             >
                               {item.name}
                             </a>
-                          ))}
+                          ))} */}
                         </nav>
                       </div>
                       <div className="px-12 lg:px-0">
                         {/* Search */}
-                        <div className="max-w-xs mx-auto w-full lg:max-w-md">
+                        {/* <div className="max-w-xs mx-auto w-full lg:max-w-md">
                           <label htmlFor="search" className="sr-only">
                             Search
                           </label>
@@ -262,7 +190,7 @@ class StaffDashboard extends React.Component {
                               name="search"
                             />
                           </div>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </div>
@@ -395,19 +323,19 @@ class StaffDashboard extends React.Component {
                             <img className="mx-auto h-20 w-20 rounded-full" src={user.imageUrl} alt="" />
                           </div>
                           <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
-                            <p className="text-sm font-medium text-gray-600">Welcome back,</p>
+                            <p className="text-sm font-medium text-gray-600">Hello,</p>
                             <p className="text-xl font-bold text-gray-900 sm:text-2xl">{user.name}</p>
                             <p className="text-sm font-medium text-gray-600">{user.role}</p>
                           </div>
                         </div>
-                        <div className="mt-5 flex justify-center sm:mt-0">
+                        {/* <div className="mt-5 flex justify-center sm:mt-0">
                           <Link
                             to="/settings"
                             className="flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                           >
                             View profile
                           </Link>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                     <div className="border-t border-gray-200 bg-gray-50 grid grid-cols-1 divide-y divide-gray-200 sm:grid-cols-2 sm:divide-y-0 sm:divide-x">
@@ -423,44 +351,31 @@ class StaffDashboard extends React.Component {
 
                 {/* Actions panel */}
                 <section aria-labelledby="quick-links-title">
-                  <div className="rounded-lg bg-gray-200 overflow-hidden shadow divide-y divide-gray-200 sm:divide-y-0 sm:grid sm:grid-cols-2 sm:gap-px">
+                  <div className="rounded-lg bg-gray-200 shadow divide-gray-200 sm:grid sm:grid-cols-2 sm:gap-px">
                     <h2 className="sr-only" id="quick-links-title">
                       Quick links
                     </h2>
-                    {actions.map((action, actionIdx) => (
+                    {this.state.cards.map((card, cardInd) => (
                       <Link to="lessonStaff"
-                        onClick={this.getLessons}
-                        key={action.name}
+                        key={card.name}
                         className={classNames(
-                          actionIdx === 0 ? 'rounded-tl-lg rounded-tr-lg sm:rounded-tr-none' : '',
-                          actionIdx === 1 ? 'sm:rounded-tr-lg' : '',
-                          actionIdx === actions.length - 2 ? 'sm:rounded-bl-lg' : '',
-                          actionIdx === actions.length - 1 ? 'rounded-bl-lg rounded-br-lg sm:rounded-bl-none' : '',
+                          cardInd === 0 ? 'rounded-tl-lg rounded-tr-lg sm:rounded-tr-none' : '',
+                          cardInd === 1 ? 'sm:rounded-tr-lg' : '',
+                          cardInd === this.state.cards.length - 2 ? 'sm:rounded-bl-lg' : '',
+                          cardInd === this.state.cards.length - 1 ? 'rounded-bl-lg rounded-br-lg sm:rounded-bl-none' : '',
                           'relative group bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-cyan-500'
                         )}
                       >
-                        <div>
-                          <span
-                            className={classNames(
-                              action.iconBackground,
-                              action.iconForeground,
-                              'rounded-lg inline-flex p-3 ring-4 ring-white'
-                            )}
-                          >
-                            {/* <action.icon className="h-6 w-6" aria-hidden="true" /> */}
-                          </span>
-                        </div>
                         <div className="mt-8">
                           <h3 className="text-lg font-medium">
-                            <a href={action.href} className="focus:outline-none">
+                            <a href={card.href} className="focus:outline-none">
                               {/* Extend touch target to entire panel */}
                               <span className="absolute inset-0" aria-hidden="true" />
-                              {action.name}
+                              {card.name}
                             </a>
                           </h3>
-                          <p className="mt-2 text-sm text-gray-500">
-                            Doloribus dolores nostrum quia qui natus officia quod et dolorem. Sit repellendus qui ut at
-                            blanditiis et quo et molestiae.
+                          <p className="mt-2 text-sm text-gray-500 truncate">
+                            {card.body}
                           </p>
                         </div>
                         <span
@@ -487,12 +402,9 @@ class StaffDashboard extends React.Component {
                       </h2>
                       <div className="flow-root mt-6">
                         <ul role="list" className="-my-5 divide-y divide-gray-200">
-                          {recentHires.map((person) => (
+                          {this.state.students.map((person) => (
                             <li key={person.name} className="py-4">
                               <div className="flex items-center space-x-4">
-                                <div className="flex-shrink-0">
-                                  <img className="h-8 w-8 rounded-full" src={person.imageUrl} alt="" />
-                                </div>
                                 <div className="flex-1 min-w-0">
                                   <p className="text-m font-medium text-gray-900 truncate">{person.name}</p>
                                 </div>
@@ -501,14 +413,14 @@ class StaffDashboard extends React.Component {
                           ))}
                         </ul>
                       </div>
-                      <div className="mt-6">
+                      {/* <div className="mt-6">
                         <a
                           href="#"
                           className="w-full flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                         >
                           View all
                         </a>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </section>
@@ -646,6 +558,26 @@ class StaffDashboard extends React.Component {
         </footer>
       </div>
     </>)
+  }
+
+  componentDidMount(){
+    this.setState({cards: []})
+    let tempCards = [];
+    this.lessonRepo.getLessons().then(x =>{
+      x.forEach(data =>{
+        tempCards.push({name: data.title, href: "#", body: data.content})
+      })
+      this.setState({cards: tempCards})
+    })
+
+    this.setState({students: []})
+    let tempStu = [];
+    this.accountRepo.getStaffStudents().then(x =>{
+      x.forEach(data => {
+        tempStu.push({name:data.full_name})
+      })
+      this.setState({students: tempStu})
+    })
   }
 }
 
