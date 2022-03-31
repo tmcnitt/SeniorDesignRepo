@@ -62,6 +62,14 @@ class CreateLesson extends React.Component {
 
   handleCreate(event){
     event.preventDefault();
+    if(this.state.lesson_title === "" || this.state.contents === ""){
+      alert("Please fill out the information required")
+      return;
+    }
+    if(this.state.dateTime === "" && this.state.AssignToMyStudents === true){
+      alert("Please provide a due date for students")
+      return;
+    }
     this.lessonRepo.createLesson(this.state.lesson_title, 1, this.state.contents).then(lessonData =>{
       if(this.state.AssignToMyStudents === true){
         let id = lessonData.id
@@ -70,6 +78,13 @@ class CreateLesson extends React.Component {
             this.lessonRepo.addLessonStudents(id, this.state.dateTime, student.id)
           })
       })}
+      alert("Lesson created")
+      this.setState({
+        lesson_title: "",
+        contents: "",
+        AssignToMyStudents: false,
+        dateTime: ""
+      })
     })
   }
 
@@ -273,9 +288,9 @@ class CreateLesson extends React.Component {
         </div>
       </header>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
+      <div className="pt-5 max-w-3xl mx-auto px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
         <div className="flex items-center space-x-5">
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-gray-900">
             Create New Lesson
           </h1>
         </div>
@@ -353,6 +368,7 @@ class CreateLesson extends React.Component {
                                       name="AssignToMyStudents"
                                       type="checkbox"
                                       className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                                      checked={this.state.AssignToMyStudents}
                                     />
                                   </div>
                                   <div className="ml-3 text-sm">
@@ -425,27 +441,27 @@ class CreateLesson extends React.Component {
                 </div>
               </div>
 
+              {this.state.AssignToMyStudents &&
               <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
-                    <div className="space-y-6 sm:space-y-5 divide-y divide-gray-200">
-                      <div className="pt-6 sm:pt-5">
-                        <div role="group" aria-labelledby="label-assign">
-                          <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-baseline">
-                            <div>
-                              <label
-                                htmlFor="dateTime"
-                                className="text-base font-medium text-gray-900 sm:text-sm sm:text-gray-700"
-                                id="label-assign"
-                              >
-                               Due Date: 
-                              </label>
-                            </div>
-                            <div className="mt-4 sm:mt-0 sm:col-span-2">
-                              <div className="max-w-lg space-y-4">
-                                <div className="relative flex items-start">
-                                  <div className="flex items-center h-5">
-                                    <input type="datetime-local" id="dateTime" name="dateTime" onChange={this.handleChange}/>
-                                  </div>
-                                </div>
+                <div className="space-y-6 sm:space-y-5 divide-y divide-gray-200">
+                  <div className="pt-6 sm:pt-5">
+                    <div role="group" aria-labelledby="label-assign">
+                      <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-baseline">
+                        <div>
+                          <label
+                            htmlFor="dateTime"
+                            className="text-base font-medium text-gray-900 sm:text-sm sm:text-gray-700"
+                            id="label-assign"
+                          >
+                            Due Date: 
+                          </label>
+                        </div>
+                        <div className="mt-4 sm:mt-0 sm:col-span-2">
+                          <div className="max-w-lg space-y-4">
+                            <div className="relative flex items-start">
+                              <div className="flex items-center h-5">
+                                <input type="datetime-local" id="dateTime" name="dateTime" 
+                                onChange={this.handleChange} value={this.state.dateTime}/>
                               </div>
                             </div>
                           </div>
@@ -453,7 +469,9 @@ class CreateLesson extends React.Component {
                       </div>
                     </div>
                   </div>
-
+                </div>
+              </div>
+              }
 
               <div className="pt-8 space-y-6 sm:pt-10 sm:space-y-5">
                 <div>
