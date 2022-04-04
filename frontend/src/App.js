@@ -42,6 +42,9 @@ function App() {
             <Route path="/login">
               <Login />
             </Route>
+            <Route path="/">
+              <Login />
+            </Route>
             <Route path="/forgot">
               <ForgotPassword />
             </Route>
