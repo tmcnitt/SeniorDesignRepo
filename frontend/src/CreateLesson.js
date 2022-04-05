@@ -36,36 +36,49 @@ class CreateLesson extends React.Component {
       lesson_title: "",
       contents: "",
       AssignToMyStudents: false,
-      dateTime: ""
+      dateTime: "",
+      AssignToSpec: false,
+      SelectedStudents: [],
+      AllStudents: []
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleCreate = this.handleCreate.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
   }
 
+  
   componentDidMount() {
     const token = this.context.JWT
     this.lessonRepo = new LessonRepository(token)
     this.accountRepo = new AccountsRepository(token);
+    let temp = []
+    this.accountRepo.getStaffStudents().then(students => {
+      students.forEach(student => {
+        temp.push({id: student.id, name: student.full_name})
+      })
+      this.setState({AllStudents: temp})
+      temp = Array(this.state.AllStudents.length).fill(false)
+      this.setState({boolStudents: temp})
+    })
   }
-
+  
   handleCreate(event) {
     event.preventDefault();
     if (this.state.lesson_title === "" || this.state.contents === "") {
       alert("Please fill out the information required")
       return;
     }
-    if (this.state.dateTime === "" && this.state.AssignToMyStudents === true) {
+    if (this.state.dateTime === "" && (this.state.AssignToMyStudents === true ||
+       this.state.AssignToSpec == true)) {
       alert("Please provide a due date for students")
       return;
     }
     this.lessonRepo.createLesson(this.state.lesson_title, 1, this.state.contents).then(lessonData => {
-      if (this.state.AssignToMyStudents === true) {
+      if (this.state.AssignToMyStudents === true || this.state.AssignToSpec === true) {
         let id = lessonData.id
-        this.accountRepo.getStaffStudents().then(students => {
-          students.forEach(student => {
+        this.state.SelectedStudents.forEach(student => {
             this.lessonRepo.addLessonStudents(id, this.state.dateTime, student.id)
-          })
         })
       }
       alert("Lesson created")
@@ -73,18 +86,52 @@ class CreateLesson extends React.Component {
         lesson_title: "",
         contents: "",
         AssignToMyStudents: false,
-        dateTime: ""
+        dateTime: "",
+        AssignToSpec: false,
+        SelectedStudents: []
       })
     })
   }
 
   handleChange(event) {
     const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
-    this.setState({ [name]: value });
+    if(target.type !== 'checkbox'){
+      const value = target.type === 'checkbox' ? target.checked : target.value;
+      this.setState({ [name]: value });
+    }
+    if(name === "AssignToMyStudents"){
+      this.setState({SelectedStudents: [] })
+      if(this.state.AssignToMyStudents === true){
+        this.setState({AssignToMyStudents: false})
+        return
+      }
+      this.setState({AssignToMyStudents: true, AssignToSpec: false, SelectedStudents: this.state.AllStudents})
+    }
+    if(name === "AssignToSpec"){
+      this.setState({SelectedStudents: [] })
+      if(this.state.AssignToSpec === true){
+        this.setState({AssignToSpec: false})
+        return
+      }
+      this.setState({AssignToSpec: true, AssignToMyStudents: false})
+    }
   }
 
+  handleSelect(event){
+    const target = event.target;
+    const name = target.name;
+    let temp = this.state.SelectedStudents
+    if(temp.includes(name)){
+
+    }
+    else{
+      temp.push({id: name})
+    }
+    this.setState({SelectedStudents: temp})
+    console.log(this.state.SelectedStudents)
+  }
+  
   render() {
     return (
       <>
@@ -126,27 +173,6 @@ class CreateLesson extends React.Component {
                       </div>
                     </div>
 
-                    {/* <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                    <label
-                      htmlFor="about"
-                      className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-                    >
-                      Lesson Description
-                    </label>
-                    <div className="mt-1 sm:mt-0 sm:col-span-2">
-                      <textarea
-                        id="description"
-                        name="description"
-                        rows={3}
-                        className="max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border border-gray-300 rounded-md"
-                        defaultValue={""}
-                      />
-                      <p className="mt-2 text-sm text-gray-500">
-                        Briefly describe the goal of the lesson.
-                      </p>
-                    </div>
-                  </div> */}
-
                     <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
                       <div className="space-y-6 sm:space-y-5 divide-y divide-gray-200">
                         <div className="pt-6 sm:pt-5">
@@ -186,53 +212,31 @@ class CreateLesson extends React.Component {
                                       </p>
                                     </div>
                                   </div>
-                                  {/* <div>
+                                  <div>
                                   <div className="relative flex items-start">
                                     <div className="flex items-center h-5">
                                       <input
-                                        id="AssignToGroup"
-                                        name="AssignToGroup"
+                                        onChange={this.handleChange}
+                                        id="AssignToSpec"
+                                        name="AssignToSpec"
                                         type="checkbox"
                                         className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                                        checked={this.state.AssignToSpec}
                                       />
                                     </div>
                                     <div className="ml-3 text-sm">
                                       <label
-                                        htmlFor="AssignToGroups"
-                                        className="font-medium text-gray-700"
-                                      >
-                                        Assign To Specific Group
-                                      </label>
-                                      <p className="text-gray-500">
-                                        Assigns the lesson to students within a
-                                        specific group.
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div>
-                                  <div className="relative flex items-start">
-                                    <div className="flex items-center h-5">
-                                      <input
-                                        id="AssignToSpecific"
-                                        name="AssignToSpecific"
-                                        type="checkbox"
-                                        className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                                      />
-                                    </div>
-                                    <div className="ml-3 text-sm">
-                                      <label
-                                        htmlFor="AssignToSpecific"
+                                        htmlFor="AssignToSpec"
                                         className="font-medium text-gray-700"
                                       >
                                         Assign To Specific Students
                                       </label>
                                       <p className="text-gray-500">
-                                        Assigns the lesson to specific students.
+                                        Assigns the lesson to specified students
                                       </p>
                                     </div>
                                   </div>
-                                </div> */}
+                                </div>
                                 </div>
                               </div>
                             </div>
@@ -243,8 +247,8 @@ class CreateLesson extends React.Component {
                   </div>
                 </div>
 
-                {this.state.AssignToMyStudents &&
-                  <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
+                {(this.state.AssignToMyStudents || this.state.AssignToSpec) && <>
+                  <div className="pb-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
                     <div className="space-y-6 sm:space-y-5 divide-y divide-gray-200">
                       <div className="pt-6 sm:pt-5">
                         <div role="group" aria-labelledby="label-assign">
@@ -273,7 +277,21 @@ class CreateLesson extends React.Component {
                       </div>
                     </div>
                   </div>
-                }
+                </>}
+
+                {this.state.AssignToSpec && <>
+                  <div className="text-center sm:grid sm:grid-cols-4 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
+                    {this.state.AllStudents.map((student, studentInd) => ( 
+                      <div className="flex" key={student.id}>
+                        <input type="checkbox" id={student.id} name={student.id} 
+                        onChange={this.handleSelect}/>
+                        <label className="text-m font-medium text-gray-900 pl-2" htmlFor={student.id} > 
+                          {student.name}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </>}
 
                 <div className="pt-8 space-y-6 sm:pt-10 sm:space-y-5">
                   <div>
@@ -293,46 +311,6 @@ class CreateLesson extends React.Component {
                     value={this.state.contents}
                     onChange={this.handleChange}
                   />
-                  {/* <div className="space-y-6 sm:space-y-5">
-                  <div className="mt-1 sm:mt-0 sm:col-span-2">
-                    <div className="max-w-lg flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                      <div className="space-y-1 text-center">
-                        <svg
-                          className="mx-auto h-12 w-12 text-gray-400"
-                          stroke="currentColor"
-                          fill="none"
-                          viewBox="0 0 48 48"
-                          aria-hidden="true"
-                        >
-                          <path
-                            d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                            strokeWidth={2}
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                        <div className="flex text-sm text-gray-600">
-                          <label
-                            htmlFor="file-upload"
-                            className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
-                          >
-                            <span>Upload a file</span>
-                            <input
-                              id="file-upload"
-                              name="file-upload"
-                              type="file"
-                              className="sr-only"
-                            />
-                          </label>
-                          <p className="pl-1">or drag and drop</p>
-                        </div>
-                        <p className="text-xs text-gray-500">
-                          PDF, TXT, or Docx
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div> */}
                 </div>
               </div>
 
@@ -346,7 +324,9 @@ class CreateLesson extends React.Component {
                   </Link>
                   <button
                     type="submit"
-                    className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm 
+                    text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 
+                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     onClick={this.handleCreate}
                   >
                     Create Lesson

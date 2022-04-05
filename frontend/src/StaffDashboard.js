@@ -144,7 +144,7 @@ class StaffDashboard extends React.Component {
                         )}
                       >
                         <div className="mt-8">
-                          <h3 className="text-lg font-medium">
+                          <h3 className="text-lg font-medium truncate">
                             <a href={card.href} className="focus:outline-none">
                               {/* Extend touch target to entire panel */}
                               <span className="absolute inset-0" aria-hidden="true" />
