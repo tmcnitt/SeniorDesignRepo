@@ -19,14 +19,9 @@ import {
 import { ChevronLeftIcon } from '@heroicons/react/solid'
 import { AppContext } from './AppContext'
 import { Navbar } from './Navbar'
+import { AccountsRepository } from "./api/AccountsRepository"
+import { Redirect } from 'react-router-dom' 
 
-const navigation = [
-    { name: 'Home', href: '#', icon: HomeIcon },
-    { name: 'Trending', href: '#', icon: FireIcon },
-    { name: 'Bookmarks', href: '#', icon: BookmarkAltIcon },
-    { name: 'Messages', href: '#', icon: InboxIcon },
-    { name: 'Profile', href: '#', icon: UserIcon },
-]
 const subNavigation = [
     {
         name: 'Account',
@@ -83,16 +78,33 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
+export default function Settings() {
     const { user } = useContext(AppContext);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const [full_name, set_full_name] = useState(user.user.full_name)
+    const [email, set_email] = useState(user.user.email)
+    const [success, set_success] = useState(false)
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        if (full_name === "" || email === "") {
+          alert("Please fill out all fields")
+          return;
+        }
+        AccountsRepository.changeSettings(full_name, email, user.user_type).then(value => {
+          alert("Settings changed successfully")
+          set_success(true)
+        })
+      }
 
     return (
         <>
+            {success &&
+            <Redirect to="dashboard"></Redirect>}
             <div className="h-full flex">  
                 <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
                     <Navbar />
-                    <main className="-mt-24 flex-1 flex overflow-hidden">
+                    <main className="flex-1 flex overflow-hidden">
                         <div className="flex-1 flex flex-col overflow-y-auto xl:overflow-hidden">
                             <div className="flex-1 flex xl:overflow-hidden">
                                 {/* Main content */}
@@ -104,15 +116,15 @@ export default function Example() {
                                             <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-6 sm:gap-x-6">
 
                                                 <div className="sm:col-span-full">
-                                                    <label htmlFor="full-name" className="block text-sm font-medium text-blue-gray-900">
+                                                    <label htmlFor="full_name" className="block text-sm font-medium text-blue-gray-900">
                                                         Full name
                                                     </label>
                                                     <input
                                                         type="text"
-                                                        value={user.user.full_name}
-                                                        name="first-name"
-                                                        id="first-name"
-                                                        autoComplete="given-name"
+                                                        value={full_name}
+                                                        name="full_name"
+                                                        id="full_name"
+                                                        onChange={e => set_full_name(e.target.value)}
                                                         className="mt-1 block w-full border-blue-gray-300 rounded-md shadow-sm text-blue-gray-900 sm:text-sm focus:ring-blue-500 focus:border-blue-500"
                                                     />
                                                 </div>
@@ -123,10 +135,10 @@ export default function Example() {
                                                     </label>
                                                     <input
                                                         type="text"
-                                                        value={user.user.email}
-                                                        name="first-name"
-                                                        id="first-name"
-                                                        autoComplete="given-name"
+                                                        value={email}
+                                                        name="email"
+                                                        id="email"
+                                                        onChange={e => set_email(e.target.value)}
                                                         className="mt-1 block w-full border-blue-gray-300 rounded-md shadow-sm text-blue-gray-900 sm:text-sm focus:ring-blue-500 focus:border-blue-500"
                                                     />
                                                 </div>
@@ -141,6 +153,7 @@ export default function Example() {
                                             <div className="pt-8 flex justify-end">
                                                 <button
                                                     type="submit"
+                                                    onClick={handleSubmit}
                                                     className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                                                 >
                                                     Save changes
