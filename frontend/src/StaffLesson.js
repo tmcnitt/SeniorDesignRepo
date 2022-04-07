@@ -130,9 +130,9 @@ const StaffLesson = () => {
                                                     </div>
                                                     <div className="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4 truncate">
                                                         <div>
-                                                            <p className="text-sm text-gray-500 truncate">
+                                                            <a href={"/lessonStaff/" + item.id} className="text-sm text-gray-500 truncate">
                                                                 {item.title}              
-                                                            </p>
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>
