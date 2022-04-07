@@ -30,7 +30,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const CreateLesson = () => {
+const EditLesson = () => {
 
   const [lesson_title, setLesson_title] = useState("")
   const [contents, setContents] = useState("")
@@ -39,6 +39,7 @@ const CreateLesson = () => {
   const [AssignToSpec, setAssignToSpec] = useState(false)
   const [SelectedStudents, setSelectedStudents] = useState([])
   const [AllStudents, setAllStudents] = useState([])
+  const [hasContents, setHasContents] = useState(false)
 
   const params = useParams();
   const context = useContext(AppContext)
@@ -47,14 +48,44 @@ const CreateLesson = () => {
   const accountRepo = new AccountsRepository(token);
   
   useEffect(() => {
-    let temp = []
-    accountRepo.getStaffStudents().then(students => {
-      students.forEach(student => {
-        temp.push({id: student.id, name: student.full_name})
-      })
-      setAllStudents(temp)
-    })
-  }, [])
+    if(!hasContents){
+        accountRepo.getStaffStudents().then(students => {
+            let temp = []
+            students.forEach(student => {
+                temp.push({student_id: student.id, name: student.full_name})
+            })
+            setAllStudents(temp)
+        })
+        lessonRepo.getLessonSpecific(params.lessonid).then(lesson=>{
+            setLesson_title(lesson.title);
+            setContents(lesson.content);
+        })
+        setHasContents(true)
+    }
+  }, [AllStudents, lesson_title, contents])
+
+  useEffect(() => {
+    if(AllStudents.length !== 0){
+        lessonRepo.getLessonStudents(params.lessonid).then(students => {
+          if(students.length === 0)
+            return
+          console.log(AllStudents)
+          setDateTime(students[0].due)
+          if(students.length === AllStudents.length){
+              setAssignToMyStudents(true)
+              setSelectedStudents(AllStudents)
+            }
+          else if(students.length > 0){
+              setAssignToSpec(true)
+              let temp = []
+              students.forEach(student => {
+                temp.push({student_id: student.student_id, checked: true})
+              })
+              setSelectedStudents(temp)
+          }
+        })
+    }
+  }, [AllStudents])
   
   const handleCreate = (event) => {
     event.preventDefault();
@@ -67,30 +98,23 @@ const CreateLesson = () => {
       alert("Please provide a due date for students")
       return;
     }
-    lessonRepo.createLesson(lesson_title, 1, contents).then(lessonData => {
-      if (AssignToSpec === true) {
-        let id = lessonData.id
-        SelectedStudents.forEach(student => {
-            lessonRepo.addLessonStudents(id, dateTime, student.id)
-        })
-      }
-      if (AssignToMyStudents === true) {
-        let id = lessonData.id
-        AllStudents.forEach(student => {
-            lessonRepo.addLessonStudents(id, dateTime, student.id)
-        })
-      }
-      alert("Lesson created")
-      setLesson_title("")
-      setContents("")
-      setAssignToMyStudents(false)
-      setDateTime("")
-      setAssignToSpec(false)
-      setSelectedStudents([])
-    })
+    // lessonRepo.createLesson(lesson_title, 1, contents).then(lessonData => {
+    //   if (AssignToMyStudents === true || AssignToSpec === true) {
+    //     let id = lessonData.id
+    //     SelectedStudents.forEach(student => {
+    //         lessonRepo.addLessonStudents(id, dateTime, student.student_id)
+    //     })
+    //   }
+    //   alert("Lesson created")
+    //   setLesson_title("")
+    //   setContents("")
+    //   setAssignToMyStudents(false)
+    //   setDateTime("")
+    //   setAssignToSpec(false)
+    //   setSelectedStudents([])
+    // })
+    console.log(SelectedStudents)
   }
-
-
 
   const handleSelect = (event) => {
     const target = event.target;
@@ -98,7 +122,7 @@ const CreateLesson = () => {
     let temp = SelectedStudents
     let contains = false;
     for(let i = 0; i < temp.length; i++){
-      if(temp[i].id === name){
+      if(temp[i].student_id === name){
         temp.splice(i, 1)
         contains = true
         break
@@ -116,7 +140,7 @@ const CreateLesson = () => {
       <div className="pt-5 max-w-3xl mx-auto px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
         <div className="flex items-center space-x-5">
           <h1 className="text-3xl font-bold text-gray-900">
-            Create New Lesson
+            Edit Lesson
           </h1>
         </div>
         <div className="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-reverse sm:space-y-0 sm:space-x-3 md:mt-0 md:flex-row md:space-x-3"></div>
@@ -266,10 +290,10 @@ const CreateLesson = () => {
               {AssignToSpec && <>
                 <div className="text-center sm:grid sm:grid-cols-4 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
                   {AllStudents.map((student, studentInd) => ( 
-                    <div className="flex" key={student.id}>
-                      <input type="checkbox" id={student.id} name={student.id} 
-                      onChange={e => handleSelect(e)}/>
-                      <label className="text-m font-medium text-gray-900 pl-2" htmlFor={student.id} > 
+                    <div className="flex" key={student.student_id}>
+                      <input type="checkbox" id={student.student_id} name={student.student_id} 
+                      onChange={e => {handleSelect(e)}} checked={SelectedStudents.some(stu => stu.student_id === student.student_id) ? true : false}/>
+                      <label className="text-m font-medium text-gray-900 pl-2" htmlFor={student.student_id} > 
                         {student.name}
                       </label>
                     </div>
@@ -313,7 +337,7 @@ const CreateLesson = () => {
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   onClick={e => handleCreate(e)}
                 >
-                  Create Lesson
+                  Update Lesson
                 </button>
               </div>
             </div>
@@ -324,7 +348,7 @@ const CreateLesson = () => {
   );
 }
 
-CreateLesson.contextType = AppContext;
+EditLesson.contextType = AppContext;
 
 
-export default CreateLesson;
+export default EditLesson;

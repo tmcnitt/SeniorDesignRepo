@@ -13,6 +13,7 @@ import StaffLesson from './StaffLesson'
 import StudentAssignment from './StudentAssignment'
 import StaffAssignment from './StaffAssignment';
 import ForgotPassword from './ForgotPassword';
+import EditLesson from './EditLesson';
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
@@ -79,6 +80,9 @@ function App() {
             </PrivateRoute>
             <PrivateRoute path="/assignmentStaff">
               <StaffAssignment />
+            </PrivateRoute>
+            <PrivateRoute path="/editLesson/:lessonid" exact>
+              <EditLesson />
             </PrivateRoute>
             <Route path="/">
               <Login />
