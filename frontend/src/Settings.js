@@ -84,6 +84,7 @@ export default function Settings() {
     const [full_name, set_full_name] = useState(user.user.full_name)
     const [email, set_email] = useState(user.user.email)
     const [success, set_success] = useState(false)
+    const accountRepo = new AccountsRepository();
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -91,7 +92,7 @@ export default function Settings() {
           alert("Please fill out all fields")
           return;
         }
-        AccountsRepository.changeSettings(full_name, email, user.user_type).then(value => {
+        accountRepo.changeSettings(full_name, email, user.user_type).then(value => {
           alert("Settings changed successfully")
           set_success(true)
         })
