@@ -7,14 +7,9 @@ export default function Homepage() {
     const { user } = useContext(AppContext);
     return(
         <div>
-            {(() => {
-                if (typeof(user) !== 'undefined'){
-                    <Dashboard />
-                }
-                else{
-                    <Login />
-                }
-            })()}
+            {user ? (
+                <Dashboard />
+            ) : <Login />}
         </div>
     )
 }
