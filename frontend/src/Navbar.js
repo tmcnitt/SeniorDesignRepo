@@ -43,7 +43,7 @@ export function Navbar() {
     ]
 
     return (
-        <Popover as="header" className="pb-24 bg-gradient-to-r from-sky-800 to-cyan-600">
+        <Popover as="header" className="pb-15 bg-gradient-to-r from-sky-800 to-cyan-600">
             {({ open }) => (
                 <>
                     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8">

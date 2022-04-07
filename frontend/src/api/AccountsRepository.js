@@ -19,7 +19,6 @@ export class AccountsRepository {
             })
                 .then(x => resolve(x.data))
                 .catch(error => {
-                    alert("Error getting Students!");
                     reject(error);
                 });
         })

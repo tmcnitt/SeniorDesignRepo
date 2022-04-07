@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import { Menu, Popover, Transition } from '@headlessui/react'
 import {
   AcademicCapIcon,
@@ -13,74 +13,73 @@ import {
 } from '@heroicons/react/outline'
 import { CheckCircleIcon, ClipboardCheckIcon, ClipboardListIcon, InboxIcon, MinusCircleIcon, SearchIcon } from '@heroicons/react/solid'
 import React from 'react'
+import { useContext, useEffect } from 'react'
 import { AccountsRepository } from './api/AccountsRepository'
 import { LessonRepository } from './api/LessonRepository'
-import {Link, Redirect} from 'react-router-dom'
+import {Link, Redirect, useParams} from 'react-router-dom'
 import { AppContext } from './AppContext'
 import { Navbar } from './Navbar'
-
-const user = {
-  name: 'Staff',
-  email: 'staffEmail@example.com',
-  imageUrl:
-    'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-}
-
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-class StaffDashboard extends React.Component {
+const StaffDashboard = () => {
+  const params = useParams();
+  const context = useContext(AppContext)
+  const token = context.JWT
+  const accountRepo = new AccountsRepository(token)
+  const lessonRepo = new LessonRepository(token) 
+  const user = context.user
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      studentEmail: '',
-      studentName: '',
-      staffEmail: '',
-      staffName: '',
-      cards: [],
-      students: []
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleStudentSubmit = this.handleStudentSubmit.bind(this);
-    this.handleStaffSubmit = this.handleStaffSubmit.bind(this);
-  }
+  const [studentEmail, setStudentEmail] = useState('');
+  const [studentName, setStudentName] = useState('');
+  const [staffEmail, setStaffEmail] = useState('');
+  const [staffName, setStaffName] = useState('');
+  const [cards, setCards] = useState([]);
+  const [students, setStudents] = useState([])
+  const [isSet, setIsSet] = useState(false)
 
-  handleChange(event) {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
-    this.setState({[name]: value});
-  }
+  useEffect(() => {
+    if(!isSet){
+      let tempCards = [];
+      lessonRepo.getLessons().then(x =>{
+        x.forEach(data =>{
+          tempCards.push({name: data.title, href: `/lessonStaff/${data.id}`, body: data.content, id: data.id})
+        })
+        setCards( tempCards)
+      })
+      let tempStu = [];
+      accountRepo.getStaffStudents().then(x =>{
+        x.forEach(data => {
+          tempStu.push({name:data.full_name})
+        })
+        setStudents(tempStu)
+        setIsSet(true)
+    })}
+  }, [isSet])
 
-  handleStudentSubmit(event) {
-    alert(`Created account for ${this.state.studentName} with email ${this.state.studentEmail}. Default password: 123`);
-    this.accountRepo.addStudent(this.state.studentEmail, this.state.studentName, '123');
-    this.setState({
-      studentEmail: '',
-      studentName: ''
-    });
+  const handleStudentSubmit = (event) => {
+    alert(`Created account for ${studentName} with email ${studentEmail}. Default password: 123`);
+    accountRepo.addStudent(studentEmail, studentName, '123');
+    setStudentEmail('')
+    setStudentName('')
     event.preventDefault();
   }
 
-  handleStaffSubmit(event) {
-    alert(`Created account for ${this.state.staffName} with email ${this.state.staffEmail}. Default password: 123`);
-    this.accountRepo.addStaff(this.state.staffEmail, this.state.staffName, '123');
-    this.setState({
-      staffEmail: '',
-      staffName: ''
-    });
+  const handleStaffSubmit = (event) => {
+    alert(`Created account for ${staffName} with email ${staffEmail}. Default password: 123`);
+    accountRepo.addStaff(staffEmail, staffName, '123');
+    setStaffEmail('')
+    setStaffName('')
     event.preventDefault();
   }
 
-  render() {
     return(
     <>
       <div className="min-h-full">
         <Navbar />
-        <main className="-mt-24 pb-8">
+        <main className=" pb-8">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8">
             <h1 className="sr-only">Profile</h1>
             {/* Main 3 column grid */}
@@ -96,50 +95,32 @@ class StaffDashboard extends React.Component {
                     <div className="bg-white p-6">
                       <div className="sm:flex sm:items-center sm:justify-between">
                         <div className="sm:flex sm:space-x-5">
-                          <div className="flex-shrink-0">
-                            <img className="mx-auto h-20 w-20 rounded-full" src={user.imageUrl} alt="" />
-                          </div>
                           <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
-                            <p className="text-sm font-medium text-gray-600">Hello,</p>
-                            <p className="text-xl font-bold text-gray-900 sm:text-2xl">{user.name}</p>
-                            <p className="text-sm font-medium text-gray-600">{user.role}</p>
+                            <p className="text-l font-medium text-gray-600">Hello,</p>
+                            <p className="text-xl font-bold text-gray-900 sm:text-2xl">{user.user.full_name}</p>
                           </div>
                         </div>
-                        {/* <div className="mt-5 flex justify-center sm:mt-0">
-                          <Link
-                            to="/settings"
-                            className="flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                          >
-                            View profile
-                          </Link>
-                        </div> */}
                       </div>
                     </div>
-                    <div className="border-t border-gray-200 bg-gray-50 grid grid-cols-1 divide-y divide-gray-200 sm:grid-cols-2 sm:divide-y-0 sm:divide-x">
+                    <div className="border-t border-gray-200 bg-gray-50 grid grid-cols-1 divide-y divide-gray-200">
                         <div className="px-6 py-5 text-sm font-medium text-center">
                           <Link to="createLesson" className="text-gray-900">Create New Lesson</Link>
-                        </div>
-                        <div className="px-6 py-5 text-sm font-medium text-center">
-                          <Link to="createAssignment" className="text-gray-900">Create New Assignment</Link>
                         </div>
                     </div>
                   </div>
                 </section>
 
-                {/* Actions panel */}
+                {/* Lessons*/}
                 <section aria-labelledby="quick-links-title">
                   <div className="rounded-lg bg-gray-200 shadow divide-gray-200 sm:grid sm:grid-cols-2 sm:gap-px">
-                    <h2 className="sr-only" id="quick-links-title">
-                      Quick links
-                    </h2>
-                    {this.state.cards.map((card, cardInd) => (
+                    {cards.map((card, cardInd) => (
                       <Link to={"lessonStaff/" + card.id}
                         key={card.name}
                         className={classNames(
                           cardInd === 0 ? 'rounded-tl-lg rounded-tr-lg sm:rounded-tr-none' : '',
                           cardInd === 1 ? 'sm:rounded-tr-lg' : '',
-                          cardInd === this.state.cards.length - 2 ? 'sm:rounded-bl-lg' : '',
-                          cardInd === this.state.cards.length - 1 ? 'rounded-bl-lg rounded-br-lg sm:rounded-bl-none' : '',
+                          cardInd === cards.length - 2 ? 'sm:rounded-bl-lg' : '',
+                          cardInd === cards.length - 1 ? 'rounded-bl-lg rounded-br-lg sm:rounded-bl-none' : '',
                           'relative group bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-cyan-500'
                         )}
                       >
@@ -169,8 +150,7 @@ class StaffDashboard extends React.Component {
 
               {/* Right column */}
               <div className="grid grid-cols-1 gap-4">
-
-                {/* Recent Hires */}
+                {/* Students */}
                 <section aria-labelledby="recent-hires-title">
                   <div className="rounded-lg bg-white overflow-hidden shadow">
                     <div className="p-6">
@@ -179,7 +159,7 @@ class StaffDashboard extends React.Component {
                       </h2>
                       <div className="flow-root mt-6">
                         <ul role="list" className="-my-5 divide-y divide-gray-200">
-                          {this.state.students.map((person) => (
+                          {students.map((person) => (
                             <li key={person.name} className="py-4">
                               <div className="flex items-center space-x-4">
                                 <div className="flex-1 min-w-0">
@@ -190,14 +170,6 @@ class StaffDashboard extends React.Component {
                           ))}
                         </ul>
                       </div>
-                      {/* <div className="mt-6">
-                        <a
-                          href="#"
-                          className="w-full flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                        >
-                          View all
-                        </a>
-                      </div> */}
                     </div>
                   </div>
                 </section>
@@ -221,9 +193,9 @@ class StaffDashboard extends React.Component {
                             name="studentEmail"
                             id="studentEmail"
                             autoComplete="studentEmail"
-                            value={this.state.studentEmail}
+                            value={studentEmail}
                             className="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
-                            onChange={this.handleChange}
+                            onChange={(e) => setStudentEmail(e.target.value)}
                           />
                         </div>
                         </div>
@@ -240,9 +212,9 @@ class StaffDashboard extends React.Component {
                             name="studentName"
                             id="studentName"
                             autoComplete="studentName"
-                            value={this.state.studentName}
+                            value={studentName}
                             className="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
-                            onChange={this.handleChange}
+                            onChange={(e) => setStudentName(e.target.value)}
                           />
                         </div>
                         </div>
@@ -253,7 +225,7 @@ class StaffDashboard extends React.Component {
                         <button
                           type="submit"
                           className="mx-3 mb-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                          onClick={this.handleStudentSubmit}
+                          onClick={(e) => handleStudentSubmit(e)}
                         >
                           Submit
                         </button>
@@ -281,9 +253,9 @@ class StaffDashboard extends React.Component {
                             name="staffEmail"
                             id="staffEmail"
                             autoComplete="staffEmail"
-                            value={this.state.staffEmail}
+                            value={staffEmail}
                             className="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
-                            onChange={this.handleChange}
+                            onChange={(e) => setStaffEmail(e.target.value)}
                           />
                         </div>
                         </div>
@@ -300,9 +272,9 @@ class StaffDashboard extends React.Component {
                             name="staffName"
                             id="staffName"
                             autoComplete="staffName"
-                            value={this.state.staffName}
+                            value={staffName}
                             className="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
-                            onChange={this.handleChange}
+                            onChange={(e) => setStaffName(e.target.value)}
                           />
                         </div>
                         </div>
@@ -313,7 +285,7 @@ class StaffDashboard extends React.Component {
                         <button
                           type="submit"
                           className="mx-3 mb-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                          onClick={this.handleStaffSubmit}
+                          onClick={(e) => handleStaffSubmit(e)}
                         >
                           Submit
                         </button>
@@ -335,31 +307,6 @@ class StaffDashboard extends React.Component {
         </footer>
       </div>
     </>)
-  }
-
-  componentDidMount(){
-    const token = this.context.JWT
-    this.lessonRepo = new LessonRepository(token)
-    this.accountRepo = new AccountsRepository(token);
-
-    this.setState({cards: []})
-    let tempCards = [];
-    this.lessonRepo.getLessons().then(x =>{
-      x.forEach(data =>{
-        tempCards.push({name: data.title, href: "#", body: data.content, id: data.id})
-      })
-      this.setState({cards: tempCards})
-    })
-
-    this.setState({students: []})
-    let tempStu = [];
-    this.accountRepo.getStaffStudents().then(x =>{
-      x.forEach(data => {
-        tempStu.push({name:data.full_name})
-      })
-      this.setState({students: tempStu})
-    })
-  }
 }
 
 StaffDashboard.contextType = AppContext;

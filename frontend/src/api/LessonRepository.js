@@ -126,4 +126,18 @@ export class LessonRepository {
             });
         })
     }
+
+    getLessonSpecific(lessonID){
+        return new Promise((resolve, reject) =>{
+            axios.get(`${this.url}/api/v1/lessons/${lessonID}`, {
+                headers:{
+                    Authorization: this.authorization
+                }
+            })
+            .then(x => resolve(x.data))
+            .catch(error => {
+                reject(error)
+            });
+        })
+    }
 }
