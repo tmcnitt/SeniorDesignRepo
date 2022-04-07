@@ -5,15 +5,16 @@ import Settings from "./Settings";
 import CreateLesson from "./CreateLesson";
 import CreateAssignment from "./CreateAssignment";
 import StudentLesson from "./StudentLesson";
-import Login from './Login'
-import StaffDash from './StaffDashboard'
-import StudentDash from './StudentDash'
-import Dashboard from './Dashboard'
-import StaffLesson from './StaffLesson'
+import Login from './Login';
+import StaffDash from './StaffDashboard';
+import StudentDash from './StudentDash';
+import Dashboard from './Dashboard';
+import StaffLesson from './StaffLesson';
 import StudentAssignment from './StudentAssignment'
 import StaffAssignment from './StaffAssignment';
 import ForgotPassword from './ForgotPassword';
 import EditLesson from './EditLesson';
+import Homepage from './Homepage';
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
@@ -85,7 +86,7 @@ function App() {
               <EditLesson />
             </PrivateRoute>
             <Route path="/">
-              <Login />
+              <Homepage />
             </Route>
           </Switch>
         </Router>
