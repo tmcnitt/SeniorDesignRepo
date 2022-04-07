@@ -15,8 +15,7 @@ class Login extends React.Component {
       inputPassword: '',
       scope: '',
       loginError: false,
-      redirectStudent: false,
-      redirectStaff: false
+      redirect: false,
     };
     this.accountRepo = new AccountsRepository();
     this.handleChange = this.handleChange.bind(this);
@@ -44,17 +43,8 @@ class Login extends React.Component {
 
       this.accountRepo.checkToken(value).then((user) => {
         this.context.setUser(user)
-        
         // fulfillment
-        if(this.state.scope == 'student'){
-          this.setState({
-            redirectStudent: true
-          })
-        } else if(this.state.scope == 'staff'){
-          this.setState({
-            redirectStaff: true
-          })
-        }
+          this.setState({redirect: true})
       })
 
      
@@ -82,10 +72,8 @@ class Login extends React.Component {
           <body class="h-full">
           ```
         */}
-        {this.state.redirectStaff &&
-          <Redirect to="dashStaff"></Redirect>}
-        {this.state.redirectStudent &&
-          <Redirect to="dashStudent"></Redirect>}
+        {this.state.redirect &&
+          <Redirect to="dashboard"></Redirect>}
         <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-md w-full space-y-8">
             <div>
