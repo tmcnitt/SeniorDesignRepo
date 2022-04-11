@@ -55,9 +55,9 @@ export class LessonRepository {
         })
     }
 
-    deleteLesson(lessonId){
+    deleteLesson(lesson_id){
         return new Promise((resolve, reject) =>{
-            axios.delete(`${this.url}/api/v1/lessons/${lessonId}`, {
+            axios.delete(`${this.url}/api/v1/lessons/${lesson_id}`, {
                 headers:{
                     Authorization: this.authorization
                 }
@@ -97,9 +97,9 @@ export class LessonRepository {
         })
     }
 
-    updateLessonStudents(lessonID, studentID, due){
+    updateLessonStudents(lesson_id, student_id, due, completed){
         return new Promise((resolve, reject) =>{
-            axios.put(`${this.url}/api/v1/lessons/${lessonID}/students/${studentID}`, {due}, {
+            axios.put(`${this.url}/api/v1/lessons/${lesson_id}/students/${student_id}`, {due, completed, lesson_id, student_id}, {
                 headers:{
                     Authorization: this.authorization
                 }

@@ -23,8 +23,6 @@ import { AccountsRepository } from "./api/AccountsRepository"
 import { AppContext } from './AppContext'
 import { Navbar } from './Navbar'
 
-const attachments = [{ name: "example_attachement.pdf", href: "#" }];
-
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -39,7 +37,9 @@ const EditLesson = () => {
   const [AssignToSpec, setAssignToSpec] = useState(false)
   const [SelectedStudents, setSelectedStudents] = useState([])
   const [AllStudents, setAllStudents] = useState([])
+  const [oldStudents, setOldStudents] = useState([])
   const [hasContents, setHasContents] = useState(false)
+  const [hasStudents, setHasStudents] = useState(false)
 
   const params = useParams();
   const context = useContext(AppContext)
@@ -50,45 +50,55 @@ const EditLesson = () => {
   useEffect(() => {
     if(!hasContents){
         accountRepo.getStaffStudents().then(students => {
-            let temp = []
-            students.forEach(student => {
-                temp.push({student_id: student.id, name: student.full_name})
-            })
-            setAllStudents(temp)
+          let temp = []
+          students.forEach(student => {
+              temp.push({student_id: student.id, name: student.full_name, checked: false})
+          })
+          setAllStudents(temp)
         })
         lessonRepo.getLessonSpecific(params.lessonid).then(lesson=>{
-            setLesson_title(lesson.title);
-            setContents(lesson.content);
+          setLesson_title(lesson.title);
+          setContents(lesson.content);
         })
         setHasContents(true)
     }
   }, [AllStudents, lesson_title, contents])
 
   useEffect(() => {
-    if(AllStudents.length !== 0){
-        lessonRepo.getLessonStudents(params.lessonid).then(students => {
-          if(students.length === 0)
-            return
-          console.log(AllStudents)
-          setDateTime(students[0].due)
-          if(students.length === AllStudents.length){
-              setAssignToMyStudents(true)
-              setSelectedStudents(AllStudents)
+    if(AllStudents.length !== 0 && !hasStudents){
+      lessonRepo.getLessonStudents(params.lessonid).then(students => {
+        setOldStudents(students)
+        if(students.length === 0)
+          return
+        setDateTime(students[0].due)
+        if(students.length === AllStudents.length){
+          setAssignToMyStudents(true)
+          let temp = AllStudents;
+          temp.forEach(stu => stu.checked = true)
+          setSelectedStudents(temp)
+        }
+        else {
+          setAssignToSpec(true)
+          let temp = AllStudents
+          temp.forEach(student => {
+            if(students.some(stu => stu.student_id === student.student_id)){
+              student.checked = true
             }
-          else if(students.length > 0){
-              setAssignToSpec(true)
-              let temp = []
-              students.forEach(student => {
-                temp.push({student_id: student.student_id, checked: true})
-              })
-              setSelectedStudents(temp)
-          }
-        })
+            else{
+              student.checked = false
+            }
+          })
+          setSelectedStudents(temp)
+        }
+      })
+      setHasStudents(true)
     }
   }, [AllStudents])
   
   const handleCreate = (event) => {
     event.preventDefault();
+    console.log(SelectedStudents)
+    console.log(oldStudents)
     if (lesson_title === "" || contents === "") {
       alert("Please fill out the information required")
       return;
@@ -98,39 +108,41 @@ const EditLesson = () => {
       alert("Please provide a due date for students")
       return;
     }
-    // lessonRepo.createLesson(lesson_title, 1, contents).then(lessonData => {
-    //   if (AssignToMyStudents === true || AssignToSpec === true) {
-    //     let id = lessonData.id
-    //     SelectedStudents.forEach(student => {
-    //         lessonRepo.addLessonStudents(id, dateTime, student.student_id)
-    //     })
-    //   }
-    //   alert("Lesson created")
-    //   setLesson_title("")
-    //   setContents("")
-    //   setAssignToMyStudents(false)
-    //   setDateTime("")
-    //   setAssignToSpec(false)
-    //   setSelectedStudents([])
-    // })
-    console.log(SelectedStudents)
+    lessonRepo.updateLesson(params.lessonid, lesson_title, 1, contents).then(lessonData => {
+      if (AssignToMyStudents === true || AssignToSpec === true) {
+        let id = lessonData.id
+        SelectedStudents.forEach(student => {
+          if(student.checked === true){
+            if(oldStudents.some(stu => stu.student_id === student.student_id))
+              lessonRepo.updateLessonStudents(id, student.student_id, dateTime, false)
+            else
+              lessonRepo.addLessonStudents(id, dateTime, student.student_id)
+          }
+          else{
+            if(oldStudents.some(stu => stu.student_id === student.student_id))
+              lessonRepo.deleteLessonStudent(id, student.student_id)
+          }
+        })
+      }
+      else{
+        oldStudents.forEach(student => {
+          lessonRepo.deleteLessonStudent(params.lessonid, student.student_id)
+        })
+      }
+      alert("Lesson updated")
+    })
   }
 
   const handleSelect = (event) => {
     const target = event.target;
     const name = target.name;
     let temp = SelectedStudents
-    let contains = false;
     for(let i = 0; i < temp.length; i++){
-      if(temp[i].student_id === name){
-        temp.splice(i, 1)
-        contains = true
+      if(temp[i].student_id == name){
+        temp[i].checked = !temp[i].checked
         break
       }
     }
-    if(!contains)
-      temp.push({id: name})
-    console.log(temp)
     setSelectedStudents(temp)
   }
   
@@ -193,8 +205,12 @@ const EditLesson = () => {
                                     <input
                                       onChange={e => {
                                         setAssignToMyStudents(e.target.checked)
-                                        if(AssignToSpec === true)
+                                        if(AssignToSpec === true || (AssignToMyStudents === false && AssignToSpec === false)){
                                           setAssignToSpec(false)
+                                          let temp = AllStudents;
+                                          temp.forEach(stu => stu.checked = true)
+                                          setSelectedStudents(temp)
+                                        }
                                       }}
                                       id="AssignToMyStudents"
                                       name="AssignToMyStudents"
@@ -222,8 +238,17 @@ const EditLesson = () => {
                                     <input
                                       onChange={e => {
                                         setAssignToSpec(e.target.checked)
-                                        if(AssignToMyStudents === true)
+                                        if(AssignToMyStudents === true || (AssignToMyStudents === false && AssignToSpec === false)){
                                           setAssignToMyStudents(false)
+                                          let temp = AllStudents
+                                          temp.forEach(stu => stu.checked = false)
+                                          setSelectedStudents(temp)
+                                        }
+                                        else if(SelectedStudents.length === 0 ){
+                                          let temp = AllStudents
+                                          temp.forEach(stu => stu.checked = false)
+                                          setSelectedStudents(temp)
+                                        }
                                       }}
                                       id="AssignToSpec"
                                       name="AssignToSpec"
@@ -289,12 +314,12 @@ const EditLesson = () => {
 
               {AssignToSpec && <>
                 <div className="text-center sm:grid sm:grid-cols-4 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
-                  {AllStudents.map((student, studentInd) => ( 
+                  {SelectedStudents.map((student, studentInd) => ( 
                     <div className="flex" key={student.student_id}>
                       <input type="checkbox" id={student.student_id} name={student.student_id} 
-                      onChange={e => {handleSelect(e)}} checked={SelectedStudents.some(stu => stu.student_id === student.student_id) ? true : false}/>
+                      onChange={e => {handleSelect(e)}} defaultChecked={student.checked}/>
                       <label className="text-m font-medium text-gray-900 pl-2" htmlFor={student.student_id} > 
-                        {student.name}
+                        {student.name} {student.student_id}
                       </label>
                     </div>
                   ))}
@@ -324,7 +349,7 @@ const EditLesson = () => {
 
             <div className="pt-5">
               <div className="flex justify-end">
-                <Link to="dashStaff"
+                <Link to={"/lessonStaff/" + params.lessonid}
                   type="button"
                   className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >

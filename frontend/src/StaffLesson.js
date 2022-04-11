@@ -16,7 +16,7 @@ import {
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 import React from 'react'
 import { useContext } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useHistory } from 'react-router-dom'
 import { Navbar } from './Navbar'
 import { AppContext } from './AppContext'
 import { LessonRepository } from './api/LessonRepository'
@@ -44,6 +44,7 @@ const StaffLesson = () => {
     const context = useContext(AppContext)
     const token = context.JWT
     const lessonRepo = new LessonRepository(token);
+    const history = useHistory();
 
     useEffect(()=>{
         lessonRepo.getLessonSpecific(params.lessonid).then(lesson=>{
@@ -60,6 +61,12 @@ const StaffLesson = () => {
             setLessons(temp)
         })
     }, [])
+
+    const onDelete = () => {
+        lessonRepo.deleteLesson(params.lessonid).then(data=>{
+            history.push("/dashStaff")
+        })
+    }
 
     return (<>
         <div className="min-h-full">
@@ -78,7 +85,15 @@ const StaffLesson = () => {
                         >
                             Edit Lesson
                         </Link>
+                        <button
+                            type="button"
+                            className="bg-red-600 text-white inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500"
+                            onClick={onDelete}
+                        >
+                            Delete Lesson
+                        </button>
                     </div>
+                    
                 </div>
 
                 <div className="mt-8 max-w-3xl mx-auto grid grid-cols-1 gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
