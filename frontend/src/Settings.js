@@ -79,12 +79,14 @@ function classNames(...classes) {
 }
 
 export default function Settings() {
-    const { user } = useContext(AppContext);
+    const context = useContext(AppContext)
+    const token = context.JWT
+    const user = context.user
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [full_name, set_full_name] = useState(user.user.full_name)
     const [email, set_email] = useState(user.user.email)
     const [success, set_success] = useState(false)
-    const accountRepo = new AccountsRepository();
+    const accountRepo = new AccountsRepository(token);
 
     const handleSubmit = (event) => {
         event.preventDefault();
