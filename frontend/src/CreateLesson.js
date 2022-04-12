@@ -15,7 +15,7 @@ import {
 } from "@heroicons/react/solid";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useContext } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { LessonRepository } from "./api/LessonRepository";
@@ -45,6 +45,7 @@ const CreateLesson = () => {
   const token = context.JWT
   const lessonRepo = new LessonRepository(token);
   const accountRepo = new AccountsRepository(token);
+  const history = useHistory();
   
   useEffect(() => {
     let temp = []
@@ -81,12 +82,7 @@ const CreateLesson = () => {
         })
       }
       alert("Lesson created")
-      setLesson_title("")
-      setContents("")
-      setAssignToMyStudents(false)
-      setDateTime("")
-      setAssignToSpec(false)
-      setSelectedStudents([])
+      history.push("/dashStaff")
     })
   }
 
@@ -300,7 +296,7 @@ const CreateLesson = () => {
 
             <div className="pt-5">
               <div className="flex justify-end">
-                <Link to="dashStaff"
+                <Link to="/dashStaff"
                   type="button"
                   className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >

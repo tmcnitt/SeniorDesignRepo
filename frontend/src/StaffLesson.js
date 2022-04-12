@@ -16,10 +16,12 @@ import {
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 import React from 'react'
 import { useContext } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useHistory } from 'react-router-dom'
 import { Navbar } from './Navbar'
 import { AppContext } from './AppContext'
 import { LessonRepository } from './api/LessonRepository'
+import { AccountsRepository } from './api/AccountsRepository'
+import { SubmissionRepository } from './api/SubmissionRepository'
 
 const eventTypes = {
     lessonComplete: { icon: BookOpenIcon, bgColorClass: 'bg-gray-300' },
@@ -39,18 +41,42 @@ const StaffLesson = () => {
     const [title, setTitle] = useState("Lesson Title")
     const [content, setContent] = useState("Lesson Content")
     const [lessons, setLessons] = useState([])
-
+    const [allStudents, setAllStudents] = useState([])
+    const [isSet, setIsSet] = useState(false)
+    
     const params = useParams();
     const context = useContext(AppContext)
     const token = context.JWT
     const lessonRepo = new LessonRepository(token);
+    const accountRepo = new AccountsRepository(token);
+    const subRepo = new SubmissionRepository(token);
+    const history = useHistory();
+
+    const getDate = (currDateFull) =>{
+        let str = currDateFull.getFullYear() + "-";
+        if(currDateFull.getMonth() < 10)
+            str += "0"
+        str += (currDateFull.getMonth() + 1) + "-" 
+        if(currDateFull.getDate() < 10)
+            str += "0"
+        str += currDateFull.getDate() + "T"
+        + currDateFull.getHours() + ":" + currDateFull.getMinutes() + ":" + currDateFull.getSeconds()
+        return str
+    }
 
     useEffect(()=>{
         lessonRepo.getLessonSpecific(params.lessonid).then(lesson=>{
             setTitle(lesson.title);
             setContent(lesson.content);
         })
-        
+        subRepo.getSummary(params.lessonid).then(summary => {
+            let temp = []
+            summary.forEach(item => {
+                temp.push({full_name: item.full_name, submission: item.content, complete: item.LessonStudent.complete, due: item.LessonStudent.due, student_id: item.LessonStudent.student_id})
+            })
+            setAllStudents(temp)
+            setIsSet(true)
+        })
     }, [title, content]);
 
     useEffect(() =>{
@@ -60,6 +86,38 @@ const StaffLesson = () => {
             setLessons(temp)
         })
     }, [])
+
+    const onDelete = () => {
+        if(window.confirm("Delete lesson? Click OK to confirm.")){
+            lessonRepo.deleteLesson(params.lessonid).then(data=>{
+            history.push("/dashStaff")
+            })
+        }
+    }
+
+    const datePretty = (date) => {
+        let tokens = date.split("-")
+        let tokens2 = tokens[2].split("T")
+        let tokens3 = tokens2[1].split(":")
+        let time = "a.m."
+        if(tokens3[0] > 12){
+            time = "p.m."
+            tokens3[0] = tokens3[0] - 12
+        }
+        return tokens[1] + "/" + tokens2[0] + "/" + tokens[0] + " at " + tokens3[0] + ":" + tokens3[1] + " " + time
+    }
+
+    const onToggle = (e) => {
+        let target = e.target
+        if(target.innerHTML === "Mark as complete"){
+            target.className = "bg-gray-500 text-white font-bold px-2 rounded-full float-right"
+            target.innerHTML = "Mark as incomplete"
+        }
+        else{
+            target.className = "bg-blue-500 hover:bg-blue-700 text-white font-bold px-2 rounded-full float-right"
+            target.innerHTML = "Mark as complete"
+        }
+    }
 
     return (<>
         <div className="min-h-full">
@@ -78,7 +136,15 @@ const StaffLesson = () => {
                         >
                             Edit Lesson
                         </Link>
+                        <button
+                            type="button"
+                            className="bg-red-600 text-white inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500"
+                            onClick={onDelete}
+                        >
+                            Delete Lesson
+                        </button>
                     </div>
+                    
                 </div>
 
                 <div className="mt-8 max-w-3xl mx-auto grid grid-cols-1 gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
@@ -97,6 +163,49 @@ const StaffLesson = () => {
                                 </div>
                             </div>
                         </section>
+                        <div className="space-y-6 lg:col-start-1 lg:col-span-2">
+                        {/* Description list*/}
+                        <section aria-labelledby="applicant-information-title">
+                            <div className="bg-white shadow sm:rounded-lg">
+                                <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
+                                    <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+                                        <div className="sm:col-span-2">
+                                            <h2 className="mt-1 text-gray-900">
+                                                Student Submissions:  
+                                            </h2>
+                                            <div>
+                                                {isSet && allStudents.map((student, studentInd) => (<>
+                                                    <div key={student.student_id} className="pt-2">
+                                                        {student.full_name}{": "}
+                                                        <span className={classNames(
+                                                            student.completed === true ? 'text-green-600' : 'text-red-400'
+                                                            )}>
+                                                            {student.completed ? <span>Complete</span> : <span>Incomplete</span>}
+                                                        </span>
+                                                        {", "}
+                                                        <span className='text-gray-900'>{"Due: "} 
+                                                            <span className={classNames(
+                                                                getDate(new Date()) > student.due ? 'text-red-400' : 'text-gray-900'
+                                                                )}>
+                                                                {datePretty(student.due)}
+                                                            </span>
+                                                        </span>
+                                                        <button onClick={e => onToggle(e)} id={student.student_id}
+                                                            className='bg-blue-500 hover:bg-blue-700 text-white font-bold px-2 rounded-full float-right'>
+                                                            Mark as {student.complete ? "incomplete" : "complete"}
+                                                        </button>
+                                                        {student.submission == null ? <p>Student has not made a submission</p> : <p>{student.submission}</p>}
+                                                        <p className='pb-1'></p>
+                                                    </div>
+                                                </>))}
+                                                {!isSet && <p>No students assigned to this lesson.</p>}
+                                            </div>
+                                        </div>
+                                    </dl>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
                     </div>
 
                     <section aria-labelledby="timeline-title" className="lg:col-start-3 lg:col-span-1">
@@ -104,7 +213,6 @@ const StaffLesson = () => {
                             <h2 id="timeline-title" className="text-lg font-medium text-gray-900">
                                 Lessons:
                             </h2>
-
                             {/* Activity Feed */}
                             <div className="mt-6 flow-root">
                                 <ul role="list" className="-mb-8">
@@ -144,6 +252,7 @@ const StaffLesson = () => {
                         </div>
                     </section>
                 </div>
+                
             </main>
         </div>
     </>)

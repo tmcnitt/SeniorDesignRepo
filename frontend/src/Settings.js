@@ -92,7 +92,7 @@ export default function Example() {
             <div className="h-full flex">  
                 <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
                     <Navbar />
-                    <main className="-mt-24 flex-1 flex overflow-hidden">
+                    <main className="flex-1 flex overflow-hidden">
                         <div className="flex-1 flex flex-col overflow-y-auto xl:overflow-hidden">
                             <div className="flex-1 flex xl:overflow-hidden">
                                 {/* Main content */}

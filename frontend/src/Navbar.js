@@ -49,7 +49,7 @@ export function Navbar() {
                     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8">
                         <div className="relative flex flex-wrap items-center justify-center lg:justify-between">
                             {/* Logo, need to make it go to different dashboards */}
-                            <Link to="dashboard"
+                            <Link to="/dashboard"
                                     type="button"
                                     className="absolute left-0 py-5 flex-shrink-0 lg:static"
                                 >
