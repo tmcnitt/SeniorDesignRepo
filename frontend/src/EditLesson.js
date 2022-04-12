@@ -320,7 +320,7 @@ const EditLesson = () => {
                       <input type="checkbox" id={student.student_id} name={student.student_id} 
                       onChange={e => {handleSelect(e)}} defaultChecked={student.checked}/>
                       <label className="text-m font-medium text-gray-900 pl-2" htmlFor={student.student_id} > 
-                        {student.name} {student.student_id}
+                        {student.name}
                       </label>
                     </div>
                   ))}

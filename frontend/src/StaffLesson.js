@@ -69,10 +69,10 @@ const StaffLesson = () => {
             setTitle(lesson.title);
             setContent(lesson.content);
         })
-        accountRepo.getStaffStudents().then(student => {
+        lessonRepo.getLessonStudents(params.lessonid).then(student => {
             let temp = []
             student.forEach(stu => {
-                temp.push({full_name: stu.full_name, student_id: stu.id, assigned: false})
+                temp.push({student_id: stu.student_id, due: stu.due, complete: stu.completed, submission: "", full_name: stu.full_name})
             })
             setAllStudents(temp)
         })
@@ -80,14 +80,12 @@ const StaffLesson = () => {
 
     useEffect(() => {
         if(!isSet && allStudents.length !== 0){
-            lessonRepo.getLessonStudents(params.lessonid).then(students =>{
+            subRepo.getSubmissions(params.lessonid).then(submissions => {
                 let temp = allStudents
-                students.forEach(student =>{
+                submissions.forEach(sub => {
                     for(let i = 0; i < temp.length; i++){
-                        if(temp[i].student_id === student.student_id){
-                            temp[i].due = student.due
-                            temp[i].completed = student.completed
-                            temp[i].assigned = true
+                        if(temp[i].student_id === sub.student_id){
+                            temp[i].submission = sub.content
                             continue
                         }
                     }
@@ -107,11 +105,34 @@ const StaffLesson = () => {
     }, [])
 
     const onDelete = () => {
-
         if(window.confirm("Delete lesson? Click OK to confirm.")){
             lessonRepo.deleteLesson(params.lessonid).then(data=>{
             history.push("/dashStaff")
             })
+        }
+    }
+
+    const datePretty = (date) => {
+        let tokens = date.split("-")
+        let tokens2 = tokens[2].split("T")
+        let tokens3 = tokens2[1].split(":")
+        let time = "a.m."
+        if(tokens3[0] > 12){
+            time = "p.m."
+            tokens3[0] = tokens3[0] - 12
+        }
+        return tokens[1] + "/" + tokens2[0] + "/" + tokens[0] + " at " + tokens3[0] + ":" + tokens3[1] + " " + time
+    }
+
+    const onToggle = (e) => {
+        let target = e.target
+        if(target.innerHTML === "Mark as complete"){
+            target.className = "bg-gray-500 text-white font-bold px-2 rounded-full float-right"
+            target.innerHTML = "Mark as incomplete"
+        }
+        else{
+            target.className = "bg-blue-500 hover:bg-blue-700 text-white font-bold px-2 rounded-full float-right"
+            target.innerHTML = "Mark as complete"
         }
     }
 
@@ -172,26 +193,29 @@ const StaffLesson = () => {
                                             <div>
                                                 {isSet && allStudents.map((student, studentInd) => (<>
                                                     <div key={student.student_id} className="pt-2">
-                                                        {student.full_name}{": "}
+                                                        {student.student_id}{": "}
                                                         <span className={classNames(
-                                                        student.assigned === true ? 'text-green-600' : 'text-gray-400'
-                                                        )}>
-                                                            {student.assigned ? <><span>Assigned, </span> 
-                                                                <span className={classNames(
-                                                                student.completed === true ? 'text-green-600' : 'text-red-400'
-                                                                )}>
-                                                                    {student.completed ? <span>Complete, </span> : <span>Incomplete, </span>}
-                                                                </span><span className='text-gray-900'>{"Due: "} 
-                                                                <span className={classNames(
-                                                                    getDate(new Date()) > student.due ? 'text-red-400' : 'text-gray-900'
-                                                                )}>
-                                                                    {student.due}
-                                                                </span>
-                                                                </span></> 
-                                                            : <span>Not Assigned</span>}
+                                                            student.completed === true ? 'text-green-600' : 'text-red-400'
+                                                            )}>
+                                                            {student.completed ? <span>Complete</span> : <span>Incomplete</span>}
                                                         </span>
+                                                        {", "}
+                                                        <span className='text-gray-900'>{"Due: "} 
+                                                            <span className={classNames(
+                                                                getDate(new Date()) > student.due ? 'text-red-400' : 'text-gray-900'
+                                                                )}>
+                                                                {datePretty(student.due)}
+                                                            </span>
+                                                        </span>
+                                                        <button onClick={e => onToggle(e)} id={student.student_id}
+                                                            className='bg-blue-500 hover:bg-blue-700 text-white font-bold px-2 rounded-full float-right'>
+                                                            Mark as {student.complete ? "incomplete" : "complete"}
+                                                        </button>
+                                                        {student.submission === "" ? <p>Student has not made a submission</p> : <p>{student.submission}</p>}
+                                                        <p className='pb-1'></p>
                                                     </div>
                                                 </>))}
+                                                {!isSet && <p>No students assigned to this lesson.</p>}
                                             </div>
                                         </div>
                                     </dl>
