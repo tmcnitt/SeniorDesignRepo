@@ -20,6 +20,8 @@ import { Link, useParams, useHistory } from 'react-router-dom'
 import { Navbar } from './Navbar'
 import { AppContext } from './AppContext'
 import { LessonRepository } from './api/LessonRepository'
+import { AccountsRepository } from './api/AccountsRepository'
+import { SubmissionRepository } from './api/SubmissionRepository'
 
 const eventTypes = {
     lessonComplete: { icon: BookOpenIcon, bgColorClass: 'bg-gray-300' },
@@ -39,20 +41,62 @@ const StaffLesson = () => {
     const [title, setTitle] = useState("Lesson Title")
     const [content, setContent] = useState("Lesson Content")
     const [lessons, setLessons] = useState([])
-
+    const [allStudents, setAllStudents] = useState([])
+    const [isSet, setIsSet] = useState(false)
+    
     const params = useParams();
     const context = useContext(AppContext)
     const token = context.JWT
     const lessonRepo = new LessonRepository(token);
+    const accountRepo = new AccountsRepository(token);
+    const subRepo = new SubmissionRepository(token);
     const history = useHistory();
+
+    const getDate = (currDateFull) =>{
+        let str = currDateFull.getFullYear() + "-";
+        if(currDateFull.getMonth() < 10)
+            str += "0"
+        str += (currDateFull.getMonth() + 1) + "-" 
+        if(currDateFull.getDate() < 10)
+            str += "0"
+        str += currDateFull.getDate() + "T"
+        + currDateFull.getHours() + ":" + currDateFull.getMinutes() + ":" + currDateFull.getSeconds()
+        return str
+    }
 
     useEffect(()=>{
         lessonRepo.getLessonSpecific(params.lessonid).then(lesson=>{
             setTitle(lesson.title);
             setContent(lesson.content);
         })
-        
+        accountRepo.getStaffStudents().then(student => {
+            let temp = []
+            student.forEach(stu => {
+                temp.push({full_name: stu.full_name, student_id: stu.id, assigned: false})
+            })
+            setAllStudents(temp)
+        })
     }, [title, content]);
+
+    useEffect(() => {
+        if(!isSet && allStudents.length !== 0){
+            lessonRepo.getLessonStudents(params.lessonid).then(students =>{
+                let temp = allStudents
+                students.forEach(student =>{
+                    for(let i = 0; i < temp.length; i++){
+                        if(temp[i].student_id === student.student_id){
+                            temp[i].due = student.due
+                            temp[i].completed = student.completed
+                            temp[i].assigned = true
+                            continue
+                        }
+                    }
+                })
+                setAllStudents(temp)
+            })
+            setIsSet(true)
+        }
+    }, [allStudents])
 
     useEffect(() =>{
         lessonRepo.getLessons().then(data =>{
@@ -63,9 +107,12 @@ const StaffLesson = () => {
     }, [])
 
     const onDelete = () => {
-        lessonRepo.deleteLesson(params.lessonid).then(data=>{
+
+        if(window.confirm("Delete lesson? Click OK to confirm.")){
+            lessonRepo.deleteLesson(params.lessonid).then(data=>{
             history.push("/dashStaff")
-        })
+            })
+        }
     }
 
     return (<>
@@ -112,6 +159,46 @@ const StaffLesson = () => {
                                 </div>
                             </div>
                         </section>
+                        <div className="space-y-6 lg:col-start-1 lg:col-span-2">
+                        {/* Description list*/}
+                        <section aria-labelledby="applicant-information-title">
+                            <div className="bg-white shadow sm:rounded-lg">
+                                <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
+                                    <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+                                        <div className="sm:col-span-2">
+                                            <h2 className="mt-1 text-gray-900">
+                                                Student Submissions:  
+                                            </h2>
+                                            <div>
+                                                {isSet && allStudents.map((student, studentInd) => (<>
+                                                    <div key={student.student_id} className="pt-2">
+                                                        {student.full_name}{": "}
+                                                        <span className={classNames(
+                                                        student.assigned === true ? 'text-green-600' : 'text-gray-400'
+                                                        )}>
+                                                            {student.assigned ? <><span>Assigned, </span> 
+                                                                <span className={classNames(
+                                                                student.completed === true ? 'text-green-600' : 'text-red-400'
+                                                                )}>
+                                                                    {student.completed ? <span>Complete, </span> : <span>Incomplete, </span>}
+                                                                </span><span className='text-gray-900'>{"Due: "} 
+                                                                <span className={classNames(
+                                                                    getDate(new Date()) > student.due ? 'text-red-400' : 'text-gray-900'
+                                                                )}>
+                                                                    {student.due}
+                                                                </span>
+                                                                </span></> 
+                                                            : <span>Not Assigned</span>}
+                                                        </span>
+                                                    </div>
+                                                </>))}
+                                            </div>
+                                        </div>
+                                    </dl>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
                     </div>
 
                     <section aria-labelledby="timeline-title" className="lg:col-start-3 lg:col-span-1">
@@ -119,7 +206,6 @@ const StaffLesson = () => {
                             <h2 id="timeline-title" className="text-lg font-medium text-gray-900">
                                 Lessons:
                             </h2>
-
                             {/* Activity Feed */}
                             <div className="mt-6 flow-root">
                                 <ul role="list" className="-mb-8">
@@ -159,6 +245,7 @@ const StaffLesson = () => {
                         </div>
                     </section>
                 </div>
+                
             </main>
         </div>
     </>)

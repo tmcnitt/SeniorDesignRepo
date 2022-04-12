@@ -15,7 +15,7 @@ import {
 } from "@heroicons/react/solid";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useContext } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { LessonRepository } from "./api/LessonRepository";
@@ -29,7 +29,6 @@ function classNames(...classes) {
 }
 
 const EditLesson = () => {
-
   const [lesson_title, setLesson_title] = useState("")
   const [contents, setContents] = useState("")
   const [AssignToMyStudents, setAssignToMyStudents] = useState(false)
@@ -46,6 +45,7 @@ const EditLesson = () => {
   const token = context.JWT
   const lessonRepo = new LessonRepository(token);
   const accountRepo = new AccountsRepository(token);
+  const history = useHistory();
   
   useEffect(() => {
     if(!hasContents){
@@ -95,7 +95,7 @@ const EditLesson = () => {
     }
   }, [AllStudents])
   
-  const handleCreate = (event) => {
+  const handleUpdate = (event) => {
     event.preventDefault();
     console.log(SelectedStudents)
     console.log(oldStudents)
@@ -130,6 +130,7 @@ const EditLesson = () => {
         })
       }
       alert("Lesson updated")
+      history.push("/lessonStaff/" + params.lessonid)
     })
   }
 
@@ -360,7 +361,7 @@ const EditLesson = () => {
                   className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm 
                   text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  onClick={e => handleCreate(e)}
+                  onClick={e => handleUpdate(e)}
                 >
                   Update Lesson
                 </button>
