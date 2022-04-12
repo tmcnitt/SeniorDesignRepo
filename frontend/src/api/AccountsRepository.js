@@ -86,4 +86,33 @@ export class AccountsRepository {
                 });
         })
     }
+
+    changeSettings(full_name, email, scope){
+        if(scope == "staff"){
+            return new Promise((resolve, reject) => {
+                axios.put(`${this.url}/api/v1/staff`, {email, full_name}, {
+                    headers: {
+                        Authorization: this.authorization
+                    }
+                })
+                    .then(x => resolve(x))
+                    .catch(error => {
+                        reject(error);
+                    });
+            });
+        }
+        else if(scope == "student"){
+            return new Promise((resolve, reject) => {
+                axios.put(`${this.url}/api/v1/student`, {email, full_name}, {
+                    headers: {
+                        Authorization: this.authorization
+                    }
+                })
+                    .then(x => resolve(x))
+                    .catch(error => {
+                        reject(error);
+                    });
+            });
+        }
+    }
 }
