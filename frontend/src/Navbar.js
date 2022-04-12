@@ -48,9 +48,11 @@ export function Navbar() {
                 <>
                     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8">
                         <div className="relative flex flex-wrap items-center justify-center lg:justify-between">
-                            {/* Logo */}
-                            <div className="absolute left-0 py-5 flex-shrink-0 lg:static">
-                                <a href="#">
+                            {/* Logo, need to make it go to different dashboards */}
+                            <Link to="dashboard"
+                                    type="button"
+                                    className="absolute left-0 py-5 flex-shrink-0 lg:static"
+                                >
                                     <span className="sr-only">Workflow</span>
                                     {/* https://tailwindui.com/img/logos/workflow-mark-cyan-200.svg */}
                                     <img
@@ -58,8 +60,7 @@ export function Navbar() {
                                     src={logo}
                                     alt="Mind the Agape"
                                     />
-                                </a>
-                            </div>
+                            </Link>
 
                             {/* Right section on desktop */}
                             <div className="hidden lg:ml-4 lg:flex lg:items-center lg:py-5 lg:pr-0.5">

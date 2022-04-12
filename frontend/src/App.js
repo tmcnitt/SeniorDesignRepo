@@ -8,6 +8,7 @@ import StudentLesson from "./StudentLesson";
 import Login from './Login'
 import StaffDash from './StaffDashboard'
 import StudentDash from './StudentDash'
+import Dashboard from './Dashboard'
 import StaffLesson from './StaffLesson'
 import StudentAssignment from './StudentAssignment'
 import StaffAssignment from './StaffAssignment';
@@ -19,6 +20,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { useEffect } from 'react';
 import { AppContext, useProvideAppContext, setupLogin } from "./AppContext.js";
 import { PrivateRoute } from './PrivateRoute.js'
+import { UserAddIcon } from '@heroicons/react/solid';
 
 function App() {
   let context = useProvideAppContext();
@@ -43,9 +45,6 @@ function App() {
             <Route path="/login">
               <Login />
             </Route>
-            <Route path="/" exact>
-              <Login />
-            </Route>
             <Route path="/forgot">
               <ForgotPassword />
             </Route>
@@ -63,6 +62,9 @@ function App() {
             </PrivateRoute>
             <PrivateRoute path="/lessonStudent">
               <StudentLesson />
+            </PrivateRoute>
+            <PrivateRoute path="/dashboard">
+              <Dashboard />
             </PrivateRoute>
             <PrivateRoute path="/dashStaff">
               <StaffDash />
@@ -82,6 +84,9 @@ function App() {
             <PrivateRoute path="/editLesson/:lessonid" exact>
               <EditLesson />
             </PrivateRoute>
+            <Route path="/">
+              <Login />
+            </Route>
           </Switch>
         </Router>
       </div>
