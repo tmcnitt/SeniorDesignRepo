@@ -72,7 +72,7 @@ const StaffLesson = () => {
         subRepo.getSummary(params.lessonid).then(summary => {
             let temp = []
             summary.forEach(item => {
-                temp.push({full_name: item.full_name, submission: item.content, complete: item.LessonStudent.complete, due: item.LessonStudent.due, student_id: item.LessonStudent.student_id})
+                temp.push({full_name: item.full_name, submission: item.content, complete: item.LessonStudent.completed, due: item.LessonStudent.due, student_id: item.LessonStudent.student_id})
             })
             setAllStudents(temp)
             setIsSet(true)
@@ -109,13 +109,22 @@ const StaffLesson = () => {
 
     const onToggle = (e) => {
         let target = e.target
+        let student = {}
+        for(let i = 0; i < allStudents.length; i++){
+            if(allStudents[i].student_id == target.id)
+                student = allStudents[i]
+        }
         if(target.innerHTML === "Mark as complete"){
-            target.className = "bg-gray-500 text-white font-bold px-2 rounded-full float-right"
+            target.className = "bg-red-500 hover:bg-red-700 text-white font-bold px-2 py-1 rounded-full float-right"
             target.innerHTML = "Mark as incomplete"
+            lessonRepo.updateLessonStudents(params.lessonid, student.student_id, student.due, true, params.lessonid, student.student_id)
+            alert("Marked " + student.full_name + " as completed.")
         }
         else{
-            target.className = "bg-blue-500 hover:bg-blue-700 text-white font-bold px-2 rounded-full float-right"
+            target.className = "bg-green-500 hover:bg-green-700 text-white font-bold px-2 py-1 rounded-full float-right"
             target.innerHTML = "Mark as complete"
+            lessonRepo.updateLessonStudents(params.lessonid, student.student_id, student.due, false, params.lessonid, student.student_id)
+            alert("Marked " + student.full_name + " as incompleted.")
         }
     }
 
@@ -170,19 +179,16 @@ const StaffLesson = () => {
                                 <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
                                     <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
                                         <div className="sm:col-span-2">
-                                            <h2 className="mt-1 text-gray-900">
+                                            <h1 className="mt-1 text-gray-900">
                                                 Student Submissions:  
-                                            </h2>
+                                            </h1>
                                             <div>
                                                 {isSet && allStudents.map((student, studentInd) => (<>
-                                                    <div key={student.student_id} className="pt-2">
-                                                        {student.full_name}{": "}
-                                                        <span className={classNames(
-                                                            student.completed === true ? 'text-green-600' : 'text-red-400'
-                                                            )}>
-                                                            {student.completed ? <span>Complete</span> : <span>Incomplete</span>}
+                                                    <div key={student.student_id} className="pt-5">
+                                                        <span className='font-bold'>
+                                                            {student.full_name}
                                                         </span>
-                                                        {", "}
+                                                        <br />
                                                         <span className='text-gray-900'>{"Due: "} 
                                                             <span className={classNames(
                                                                 getDate(new Date()) > student.due ? 'text-red-400' : 'text-gray-900'
@@ -190,12 +196,28 @@ const StaffLesson = () => {
                                                                 {datePretty(student.due)}
                                                             </span>
                                                         </span>
+                                                        {" "}
+                                                        <span className={classNames(
+                                                            student.complete == true ? 'text-green-600' : 'text-red-400'
+                                                            )}>
+                                                            {student.complete ? <span>Complete</span> : <span>Incomplete</span>}
+                                                        </span>
                                                         <button onClick={e => onToggle(e)} id={student.student_id}
-                                                            className='bg-blue-500 hover:bg-blue-700 text-white font-bold px-2 rounded-full float-right'>
+                                                            className={!student.complete ? 'bg-green-500 hover:bg-green-700 text-white font-bold px-2 py-1 rounded-full float-right'
+                                                            : "bg-red-500 hover:bg-red-700 text-white font-bold px-2 py-1 rounded-full float-right"}>
                                                             Mark as {student.complete ? "incomplete" : "complete"}
                                                         </button>
-                                                        {student.submission == null ? <p>Student has not made a submission</p> : <p>{student.submission}</p>}
-                                                        <p className='pb-1'></p>
+                                                        {student.submission == null 
+                                                        ? 
+                                                            <div className='text-gray-500 pt-1'>Student has not made a submission</div> 
+                                                        :
+                                                           <div className='rounded-lg cust_outline p-1 mt-5'> 
+                                                                <div className='relative group p-1 focus-within:ring-2 focus-within:ring-inset focus-within:ring-cyan-500'>
+                                                                    {student.submission}
+                                                                </div>
+                                                           </div>
+                                                        }
+                                                        <p className='pb-5'></p>
                                                     </div>
                                                 </>))}
                                                 {!isSet && <p>No students assigned to this lesson.</p>}
