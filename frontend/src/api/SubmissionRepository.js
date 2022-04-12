@@ -26,4 +26,18 @@ export class SubmissionRepository {
             });
         })
     }
+
+    getSummary(lesson_id){
+        return new Promise((resolve, reject) =>{
+            axios.get(`${this.url}/api/v1/lessons/${lesson_id}/students/summary`, {
+                headers:{
+                    Authorization: this.authorization
+                }
+            })
+            .then(x => resolve(x.data))
+            .catch(error => {
+                reject(error)
+            });
+        })
+    }
 }

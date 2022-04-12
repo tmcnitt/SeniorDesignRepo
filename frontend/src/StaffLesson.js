@@ -69,32 +69,15 @@ const StaffLesson = () => {
             setTitle(lesson.title);
             setContent(lesson.content);
         })
-        lessonRepo.getLessonStudents(params.lessonid).then(student => {
+        subRepo.getSummary(params.lessonid).then(summary => {
             let temp = []
-            student.forEach(stu => {
-                temp.push({student_id: stu.student_id, due: stu.due, complete: stu.completed, submission: "", full_name: stu.full_name})
+            summary.forEach(item => {
+                temp.push({full_name: item.full_name, submission: item.content, complete: item.LessonStudent.complete, due: item.LessonStudent.due, student_id: item.LessonStudent.student_id})
             })
             setAllStudents(temp)
+            setIsSet(true)
         })
     }, [title, content]);
-
-    useEffect(() => {
-        if(!isSet && allStudents.length !== 0){
-            subRepo.getSubmissions(params.lessonid).then(submissions => {
-                let temp = allStudents
-                submissions.forEach(sub => {
-                    for(let i = 0; i < temp.length; i++){
-                        if(temp[i].student_id === sub.student_id){
-                            temp[i].submission = sub.content
-                            continue
-                        }
-                    }
-                })
-                setAllStudents(temp)
-            })
-            setIsSet(true)
-        }
-    }, [allStudents])
 
     useEffect(() =>{
         lessonRepo.getLessons().then(data =>{
@@ -193,7 +176,7 @@ const StaffLesson = () => {
                                             <div>
                                                 {isSet && allStudents.map((student, studentInd) => (<>
                                                     <div key={student.student_id} className="pt-2">
-                                                        {student.student_id}{": "}
+                                                        {student.full_name}{": "}
                                                         <span className={classNames(
                                                             student.completed === true ? 'text-green-600' : 'text-red-400'
                                                             )}>
@@ -211,7 +194,7 @@ const StaffLesson = () => {
                                                             className='bg-blue-500 hover:bg-blue-700 text-white font-bold px-2 rounded-full float-right'>
                                                             Mark as {student.complete ? "incomplete" : "complete"}
                                                         </button>
-                                                        {student.submission === "" ? <p>Student has not made a submission</p> : <p>{student.submission}</p>}
+                                                        {student.submission == null ? <p>Student has not made a submission</p> : <p>{student.submission}</p>}
                                                         <p className='pb-1'></p>
                                                     </div>
                                                 </>))}
