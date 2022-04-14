@@ -87,10 +87,10 @@ export class AccountsRepository {
         })
     }
 
-    changeSettings(full_name, email, scope){
+    changeSettings(full_name, email, password, scope){
         if(scope == "staff"){
             return new Promise((resolve, reject) => {
-                axios.put(`${this.url}/api/v1/staff`, {email, full_name}, {
+                axios.put(`${this.url}/api/v1/staff`, {email, full_name, password}, {
                     headers: {
                         Authorization: this.authorization
                     }
@@ -103,7 +103,7 @@ export class AccountsRepository {
         }
         else if(scope == "student"){
             return new Promise((resolve, reject) => {
-                axios.put(`${this.url}/api/v1/student`, {email, full_name}, {
+                axios.put(`${this.url}/api/v1/students`, {email, full_name, password}, {
                     headers: {
                         Authorization: this.authorization
                     }
