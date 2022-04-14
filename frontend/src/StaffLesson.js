@@ -125,7 +125,7 @@ const StaffLesson = () => {
             alert("Marked " + student.full_name + " as completed.")
         }
         else{
-            target.className = "bg-green-500 hover:bg-green-700 text-white font-bold px-2 py-1 rounded-full float-right"
+            target.className = "bg-gray-500 hover:bg-gray-700 text-white font-bold px-2 py-1 rounded-full float-right"
             target.innerHTML = "Mark as complete"
             lessonRepo.updateLessonStudents(params.lessonid, student.student_id, student.due, false, params.lessonid, student.student_id)
             alert("Marked " + student.full_name + " as incompleted.")
@@ -218,7 +218,7 @@ const StaffLesson = () => {
                                                             </span>
                                                         }
                                                         <button onClick={e => onToggle(e)} id={student.student_id}
-                                                            className={!student.complete ? 'bg-green-500 hover:bg-green-700 text-white font-bold px-2 py-1 rounded-full float-right'
+                                                            className={!student.complete ? 'bg-gray-500 hover:bg-gray-700 text-white font-bold px-2 py-1 rounded-full float-right'
                                                             : "bg-gray-500 hover:bg-gray-700 text-white font-bold px-2 py-1 rounded-full float-right"}>
                                                             Mark as {student.complete ? "incomplete" : "complete"}
                                                         </button>
