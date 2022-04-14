@@ -43,6 +43,7 @@ const StaffLesson = () => {
     const [lessons, setLessons] = useState([])
     const [allStudents, setAllStudents] = useState([])
     const [isSet, setIsSet] = useState(false)
+    const [hasStudents, setHasStudents] = useState(false)
     
     const params = useParams();
     const context = useContext(AppContext)
@@ -76,6 +77,7 @@ const StaffLesson = () => {
             })
             setAllStudents(temp)
             setIsSet(true)
+            setHasStudents(summary.length !== 0)
         })
     }, [title, content]);
 
@@ -111,11 +113,13 @@ const StaffLesson = () => {
         let target = e.target
         let student = {}
         for(let i = 0; i < allStudents.length; i++){
-            if(allStudents[i].student_id == target.id)
+            if(allStudents[i].student_id == target.id){
                 student = allStudents[i]
+                break;
+            }
         }
         if(target.innerHTML === "Mark as complete"){
-            target.className = "bg-red-500 hover:bg-red-700 text-white font-bold px-2 py-1 rounded-full float-right"
+            target.className = "bg-gray-500 hover:bg-gray-700 text-white font-bold px-2 py-1 rounded-full float-right"
             target.innerHTML = "Mark as incomplete"
             lessonRepo.updateLessonStudents(params.lessonid, student.student_id, student.due, true, params.lessonid, student.student_id)
             alert("Marked " + student.full_name + " as completed.")
@@ -202,9 +206,20 @@ const StaffLesson = () => {
                                                             )}>
                                                             {student.complete ? <span>Complete</span> : <span>Incomplete</span>}
                                                         </span>
+                                                        {student.complete ? 
+                                                            <span className='pl-1 float-right'>
+                                                                <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="check-circle" class="w-7 h-7" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                                                    <path fill="green" d="M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 48c110.532 0 200 89.451 200 200 0 110.532-89.451 200-200 200-110.532 0-200-89.451-200-200 0-110.532 89.451-200 200-200m140.204 130.267l-22.536-22.718c-4.667-4.705-12.265-4.736-16.97-.068L215.346 303.697l-59.792-60.277c-4.667-4.705-12.265-4.736-16.97-.069l-22.719 22.536c-4.705 4.667-4.736 12.265-.068 16.971l90.781 91.516c4.667 4.705 12.265 4.736 16.97.068l172.589-171.204c4.704-4.668 4.734-12.266.067-16.971z"></path>
+                                                                </svg>
+                                                            </span>
+                                                            : 
+                                                            <span className='pl-1 float-right'>
+                                                                <svg class="h-8 w-8 text-red-500"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <circle cx="12" cy="12" r="10" />  <line x1="15" y1="9" x2="9" y2="15" />  <line x1="9" y1="9" x2="15" y2="15" /></svg>
+                                                            </span>
+                                                        }
                                                         <button onClick={e => onToggle(e)} id={student.student_id}
                                                             className={!student.complete ? 'bg-green-500 hover:bg-green-700 text-white font-bold px-2 py-1 rounded-full float-right'
-                                                            : "bg-red-500 hover:bg-red-700 text-white font-bold px-2 py-1 rounded-full float-right"}>
+                                                            : "bg-gray-500 hover:bg-gray-700 text-white font-bold px-2 py-1 rounded-full float-right"}>
                                                             Mark as {student.complete ? "incomplete" : "complete"}
                                                         </button>
                                                         {student.submission == null 
@@ -220,7 +235,7 @@ const StaffLesson = () => {
                                                         <p className='pb-5'></p>
                                                     </div>
                                                 </>))}
-                                                {!isSet && <p>No students assigned to this lesson.</p>}
+                                                {!hasStudents && <p>No students assigned to this lesson.</p>}
                                             </div>
                                         </div>
                                     </dl>
