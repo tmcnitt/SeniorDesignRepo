@@ -85,16 +85,17 @@ export default function Settings() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [full_name, set_full_name] = useState(user.user.full_name)
     const [email, set_email] = useState(user.user.email)
+    const [password, set_password] = useState(user.user.password)
     const [success, set_success] = useState(false)
     const accountRepo = new AccountsRepository(token);
 
     const handleSubmit = (event) => {
         event.preventDefault();
         if (full_name === "" || email === "") {
-          alert("Please fill out all fields")
+          alert("Please fill out full name and email fields")
           return;
         }
-        accountRepo.changeSettings(full_name, email, user.user_type).then(value => {
+        accountRepo.changeSettings(full_name, email, password, user.user_type).then(value => {
           alert("Settings changed successfully")
           set_success(true)
         })
@@ -125,6 +126,7 @@ export default function Settings() {
                                                     <input
                                                         type="text"
                                                         value={full_name}
+                                                        required
                                                         name="full_name"
                                                         id="full_name"
                                                         onChange={e => set_full_name(e.target.value)}
@@ -139,6 +141,7 @@ export default function Settings() {
                                                     <input
                                                         type="text"
                                                         value={email}
+                                                        required
                                                         name="email"
                                                         id="email"
                                                         onChange={e => set_email(e.target.value)}
@@ -150,6 +153,20 @@ export default function Settings() {
                                                     <p className="mt-1 text-sm font-medium text-blue-gray-900">
                                                         This is a {user.user_type} account.
                                                     </p>
+                                                </div>
+
+                                                <div className="sm:col-span-full">
+                                                    <label htmlFor="password" className="block text-sm font-medium text-blue-gray-900">
+                                                        Change password
+                                                    </label>
+                                                    <input
+                                                        type="password"
+                                                        value={password}
+                                                        name="password"
+                                                        id="password"
+                                                        onChange={e => set_password(e.target.value)}
+                                                        className="mt-1 block w-full border-blue-gray-300 rounded-md shadow-sm text-blue-gray-900 sm:text-sm focus:ring-blue-500 focus:border-blue-500"
+                                                    />
                                                 </div>
                                             </div>
 
