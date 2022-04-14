@@ -24,6 +24,20 @@ export class AccountsRepository {
         })
     }
 
+    getClassmates(){
+        return new Promise((resolve, reject) => {
+            axios.get(`${this.url}/api/v1/students`, {
+                headers: {
+                    Authorization: this.authorization
+                }
+            })
+                .then(x => resolve(x.data))
+                .catch(error => {
+                    reject(error);
+                });
+        })
+    }
+
     addStudent(email, full_name, password){
         return new Promise((resolve, reject) => {
             axios.post(`${this.url}/api/v1/students`, {email, full_name, password}, {
