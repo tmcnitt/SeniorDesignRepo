@@ -129,4 +129,18 @@ export class AccountsRepository {
             });
         }
     }
+
+    deleteStudent(user_id){
+        return new Promise((resolve, reject) => {
+            axios.delete(`${this.url}/api/v1/students/${user_id}`, {
+                headers: {
+                    Authorization: this.authorization
+                }
+            })
+                .then(x => resolve(x.data))
+                .catch(error => {
+                    reject(error);
+                });
+        });
+    }
 }

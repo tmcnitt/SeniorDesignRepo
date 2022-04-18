@@ -140,10 +140,10 @@ class Login extends React.Component {
                   </label> */}
                   <fieldset onChange={this.handleScopeChange}>
                     <label className="ml-2 text-sm text-gray-900"><input type="radio" name="scope-option" value="student" 
-                    className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded mr-1"
                     checked={this.state.scope === 'student'}/>Student</label>
                     <label className="ml-2 text-sm text-gray-900"><input type="radio" name="scope-option" value="staff" 
-                    className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded mr-1"
                     checked={this.state.scope === 'staff'}/>Staff</label>
                   </fieldset>
                 </div>

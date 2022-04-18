@@ -52,7 +52,7 @@ const StaffDashboard = () => {
       let tempStu = [];
       accountRepo.getStaffStudents().then(x =>{
         x.forEach(data => {
-          tempStu.push({name:data.full_name})
+          tempStu.push({name:data.full_name, id:data.id})
         })
         setStudents(tempStu)
         setIsSet(true)
@@ -73,6 +73,16 @@ const StaffDashboard = () => {
     setStaffEmail('')
     setStaffName('')
     event.preventDefault();
+  }
+
+  const deleteStudent = (event) =>{
+    if(window.confirm("Delete student " + event.target.name + "? Click OK to confirm.")){
+      let target = event.target
+      accountRepo.deleteStudent(target.id)
+    }
+    else{
+      ;
+    }
   }
 
     return(
@@ -163,7 +173,8 @@ const StaffDashboard = () => {
                             <li key={person.name} className="py-4">
                               <div className="flex items-center space-x-4">
                                 <div className="flex-1 min-w-0">
-                                  <p className="text-m font-medium text-gray-900 truncate">{person.name}</p>
+                                  <span className="text-m font-medium text-gray-900 truncate">{person.name}</span>
+                                  <button className='float-right font-medium text-black' id={person.id} name={person.name} onClick={e => deleteStudent(e)}>x</button>
                                 </div>
                               </div>
                             </li>
