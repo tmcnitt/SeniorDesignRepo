@@ -62,7 +62,7 @@ export function Navbar() {
                                     />
                             </Link>
 
-                            <h1 className='text-3xl font-medium'>Mind the Agape</h1>
+                            <Link to="/dashboard" className='text-3xl font-medium'>Mind the Agape</Link>
 
                             {/* Right section on desktop */}
                             <div className="hidden lg:ml-4 lg:flex lg:items-center pr-20">
