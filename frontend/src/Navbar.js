@@ -46,12 +46,12 @@ export function Navbar() {
         <Popover as="header" className="pb-15 bg-gradient-to-r from-sky-800 to-cyan-600">
             {({ open }) => (
                 <>
-                    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-                        <div className="relative flex flex-wrap items-center justify-center lg:justify-between">
+                    <div className="bg-gray-200 mb-5">
+                        <div className="pl-20 pr-20 relative flex flex-wrap items-center justify-center lg:justify-between">
                             {/* Logo, need to make it go to different dashboards */}
                             <Link to="/dashboard"
                                     type="button"
-                                    className="absolute left-0 py-5 flex-shrink-0 lg:static"
+                                    className="ml-20 absolute left-0 py-5 flex-shrink-0 lg:static"
                                 >
                                     <span className="sr-only">Workflow</span>
                                     {/* https://tailwindui.com/img/logos/workflow-mark-cyan-200.svg */}
@@ -62,9 +62,11 @@ export function Navbar() {
                                     />
                             </Link>
 
+                            <h1 className='text-3xl font-medium'>Mind the Agape</h1>
+
                             {/* Right section on desktop */}
-                            <div className="hidden lg:ml-4 lg:flex lg:items-center lg:py-5 lg:pr-0.5">
-                                <p className='text-sm pr-2'>{user.user.full_name}</p>
+                            <div className="hidden lg:ml-4 lg:flex lg:items-center pr-20">
+                                <p className='text-sm pr-2 font-medium'>{user.user.full_name}</p>
                                 
                                 <Link to="inbox"
                                     type="button"
@@ -76,9 +78,9 @@ export function Navbar() {
 
 
                                 {/* Profile dropdown */}
-                                <Menu as="div" className="ml-4 relative flex-shrink-0">
+                                <Menu as="div" className="ml-2 relative flex-shrink-0">
                                     <div>
-                                        <Menu.Button className="bg-white rounded-full flex text-sm ring-2 ring-white ring-opacity-20 focus:outline-none focus:ring-opacity-100">
+                                        <Menu.Button className="font-medium rounded-full flex text-sm focus:outline-none hover:text-white">
                                             <p>Menu</p>
                                         </Menu.Button>
                                     </div>

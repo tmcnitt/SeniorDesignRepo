@@ -20,7 +20,7 @@ import { ChevronLeftIcon } from '@heroicons/react/solid'
 import { AppContext } from './AppContext'
 import { Navbar } from './Navbar'
 import { AccountsRepository } from "./api/AccountsRepository"
-import { Redirect } from 'react-router-dom' 
+import { Redirect, Link } from 'react-router-dom' 
 
 const subNavigation = [
     {
@@ -171,6 +171,12 @@ export default function Settings() {
                                             </div>
 
                                             <div className="pt-8 flex justify-end">
+                                                <Link
+                                                    to="/dashboard"
+                                                    className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                                                >
+                                                    Cancel
+                                                </Link>
                                                 <button
                                                     type="submit"
                                                     onClick={handleSubmit}

@@ -195,7 +195,8 @@ const StaffLesson = () => {
                                                         <br />
                                                         <span className='text-gray-900'>{"Due: "} 
                                                             <span className={classNames(
-                                                                getDate(new Date()) > student.due ? 'text-red-400' : 'text-gray-900'
+                                                                student.complete ? 'text-green-600' : '',
+                                                                getDate(new Date()) > student.due && !student.complete ? 'text-red-400' : 'text-gray-900'
                                                                 )}>
                                                                 {datePretty(student.due)}
                                                             </span>
