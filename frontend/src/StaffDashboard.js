@@ -76,8 +76,13 @@ const StaffDashboard = () => {
   }
 
   const deleteStudent = (event) =>{
-    let target = event.target
-    accountRepo.deleteStudent(target.id)
+    if(window.confirm("Delete student " + event.target.name + "? Click OK to confirm.")){
+      let target = event.target
+      accountRepo.deleteStudent(target.id)
+    }
+    else{
+      ;
+    }
   }
 
     return(
@@ -169,7 +174,7 @@ const StaffDashboard = () => {
                               <div className="flex items-center space-x-4">
                                 <div className="flex-1 min-w-0">
                                   <span className="text-m font-medium text-gray-900 truncate">{person.name}</span>
-                                  <button className='float-right font-medium text-black' id={person.id} onClick={e => deleteStudent(e)}>x</button>
+                                  <button className='float-right font-medium text-black' id={person.id} name={person.name} onClick={e => deleteStudent(e)}>x</button>
                                 </div>
                               </div>
                             </li>
