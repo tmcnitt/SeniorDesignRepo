@@ -1,22 +1,10 @@
 import { Fragment, useState } from 'react'
-import { Menu, Popover, Transition } from '@headlessui/react'
-import {
-  AcademicCapIcon,
-  BadgeCheckIcon,
-  BellIcon,
-  CashIcon,
-  ClockIcon,
-  MenuIcon,
-  ReceiptRefundIcon,
-  UsersIcon,
-  XIcon,
-} from '@heroicons/react/outline'
 import { CheckCircleIcon, ClipboardCheckIcon, ClipboardListIcon, InboxIcon, MinusCircleIcon, SearchIcon } from '@heroicons/react/solid'
 import React from 'react'
 import { useContext, useEffect } from 'react'
 import { AccountsRepository } from './api/AccountsRepository'
 import { LessonRepository } from './api/LessonRepository'
-import {Link, Redirect, useParams} from 'react-router-dom'
+import { Link, Redirect, useParams } from 'react-router-dom'
 import { AppContext } from './AppContext'
 import { Navbar } from './Navbar'
 
@@ -29,7 +17,7 @@ const StudentDashboard = () => {
   const context = useContext(AppContext)
   const token = context.JWT
   const accountRepo = new AccountsRepository(token)
-  const lessonRepo = new LessonRepository(token) 
+  const lessonRepo = new LessonRepository(token)
   const user = context.user
 
   const [cards, setCards] = useState([]);
@@ -41,35 +29,36 @@ const StudentDashboard = () => {
     let tokens2 = tokens[2].split("T")
     let tokens3 = tokens2[1].split(":")
     let time = "a.m."
-    if(tokens3[0] > 12){
-        time = "p.m."
-        tokens3[0] = tokens3[0] - 12
+    if (tokens3[0] > 12) {
+      time = "p.m."
+      tokens3[0] = tokens3[0] - 12
     }
     return tokens[1] + "/" + tokens2[0] + "/" + tokens[0] + " at " + tokens3[0] + ":" + tokens3[1] + " " + time
   }
 
   useEffect(() => {
-    if(!isSet){
-      let tempCards = [];
-      lessonRepo.getLessons().then(x =>{
-        x.forEach(data =>{
-          lessonRepo.getStatus(data.id).then(y =>{
-            tempCards.push({name: data.title, href: `/lessonStudent/${data.id}`, body: data.content, id: data.id, date: y.due, completed: y.completed})
-          })
-        })
-        setCards( tempCards)
+    let tempCards = [];
+    lessonRepo.getLessons().then(x => {
+      let promises = [];
+      x.forEach(data => {
+        promises.push(lessonRepo.getStatus(data.id).then(y => {
+          tempCards.push({ name: data.title, href: `/lessonStudent/${data.id}`, body: data.content, id: data.id, date: y.due, completed: y.completed })
+        }))
       })
-      let tempStu = [];
-      accountRepo.getClassmates().then(x =>{
-        x.forEach(data => {
-          tempStu.push({name:data.full_name})
-        })
-        setStudents(tempStu)
-        setIsSet(true)
-    })}
-  }, [isSet])
+      Promise.all(promises).then(() => {
+        setCards(tempCards)
+      })
+    })
+    let tempStu = [];
+    accountRepo.getClassmates().then(x => {
+      x.forEach(data => {
+        tempStu.push({ name: data.full_name })
+      })
+      setStudents(tempStu)
+    })
+  }, [])
 
-    return(
+  return (
     <>
       <div className="min-h-full">
         <Navbar />
@@ -132,7 +121,7 @@ const StudentDashboard = () => {
                           <span>Due: {datePretty(card.date)}</span>
                         </span>
                         <span className="absolute top-6 right-6" aria-hidden="true">
-                          {card.completed ? <CheckCircleIcon className="block h-6 w-6 text-green-600" aria-hidden="true"/> : null}
+                          {card.completed ? <CheckCircleIcon className="block h-6 w-6 text-green-600" aria-hidden="true" /> : null}
                         </span>
                       </Link>
                     ))}
@@ -172,7 +161,5 @@ const StudentDashboard = () => {
       </div>
     </>)
 }
-
-StudentDashboard.contextType = AppContext;
 
 export default StudentDashboard
