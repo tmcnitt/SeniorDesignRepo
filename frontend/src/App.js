@@ -61,7 +61,7 @@ function App() {
             <PrivateRoute path="/createAssignment">
               <CreateAssignment />
             </PrivateRoute>
-            <PrivateRoute path="/lessonStudent">
+            <PrivateRoute path="/lessonStudent/:lessonid">
               <StudentLesson />
             </PrivateRoute>
             <PrivateRoute path="/dashboard">

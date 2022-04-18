@@ -141,5 +141,19 @@ export class LessonRepository {
         })
     }
 
+    getStatus(lessonID){
+        return new Promise((resolve, reject) =>{
+            axios.get(`${this.url}/api/v1/lessons/${lessonID}/students/status`, {
+                headers:{
+                    Authorization: this.authorization
+                }
+            })
+            .then(x => resolve(x.data))
+            .catch(error => {
+                reject(error)
+            });
+        })
+    }
+
     
 }
