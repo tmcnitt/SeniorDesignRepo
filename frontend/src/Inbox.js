@@ -23,7 +23,10 @@ import {
     XIcon,
 } from '@heroicons/react/outline'
 import { Navbar } from './Navbar'
-
+import {MessageRepository} from './api/MessageRepository'
+import { useContext, useEffect } from 'react'
+import { AppContext } from './AppContext'
+import { AccountsRepository } from './api/AccountsRepository'
 
 const user = {
     name: 'Whitney Francis',
@@ -56,108 +59,7 @@ const userNavigation = [
     { name: 'Your Profile', href: '#' },
     { name: 'Sign out', href: '#' },
 ]
-const messages = [
-    {
-        id: 1,
-        subject: 'Velit placeat sit ducimus non sed',
-        sender: 'Gloria Roberston',
-        href: '#',
-        date: '1d ago',
-        datetime: '2021-01-27T16:35',
-        preview:
-            'Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.',
-    },
-    {
-        id: 2,
-        subject: 'Nemo mollitia repudiandae adipisci explicabo optio consequatur tempora ut nihil',
-        sender: 'Virginia Abshire',
-        href: '#',
-        date: '1d ago',
-        datetime: '2021-01-27T16:35',
-        preview:
-            'Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.',
-    },
-    {
-        id: 3,
-        subject: 'Doloremque reprehenderit et harum quas explicabo nulla architecto dicta voluptatibus',
-        sender: 'Kyle Gulgowski',
-        href: '#',
-        date: '1d ago',
-        datetime: '2021-01-27T16:35',
-        preview:
-            'Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.',
-    },
-    {
-        id: 4,
-        subject: 'Eos sequi et aut ex impedit',
-        sender: 'Hattie Haag',
-        href: '#',
-        date: '1d ago',
-        datetime: '2021-01-27T16:35',
-        preview:
-            'Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.',
-    },
-    {
-        id: 5,
-        subject: 'Quisquam veniam explicabo',
-        sender: 'Wilma Glover',
-        href: '#',
-        date: '1d ago',
-        datetime: '2021-01-27T16:35',
-        preview:
-            'Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.',
-    },
-    {
-        id: 6,
-        subject: 'Est ratione molestiae modi maiores consequatur eligendi et excepturi magni',
-        sender: 'Dolores Morissette',
-        href: '#',
-        date: '1d ago',
-        datetime: '2021-01-27T16:35',
-        preview:
-            'Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.',
-    },
-    {
-        id: 7,
-        subject: 'Commodi deserunt aut veniam rem ipsam',
-        sender: 'Guadalupe Walsh',
-        href: '#',
-        date: '1d ago',
-        datetime: '2021-01-27T16:35',
-        preview:
-            'Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.',
-    },
-    {
-        id: 8,
-        subject: 'Illo illum aut debitis earum',
-        sender: 'Jasmine Hansen',
-        href: '#',
-        date: '1d ago',
-        datetime: '2021-01-27T16:35',
-        preview:
-            'Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.',
-    },
-    {
-        id: 9,
-        subject: 'Qui dolore iste ut est cumque sed',
-        sender: 'Ian Volkman',
-        href: '#',
-        date: '1d ago',
-        datetime: '2021-01-27T16:35',
-        preview:
-            'Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.',
-    },
-    {
-        id: 10,
-        subject: 'Aut sed aut illum delectus maiores laboriosam ex',
-        sender: 'Rafael Klocko',
-        href: '#',
-        date: '1d ago',
-        datetime: '2021-01-27T16:35',
-        preview:
-            'Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.',
-    },
-]
+
 const message = {
     subject: 'Re: New pricing for existing customers',
     sender: 'joearmstrong@example.com',
@@ -199,8 +101,33 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
+
+
+const Inbox = () => {
     const [open, setOpen] = useState(false)
+    //const params = useParams();
+    const context = useContext(AppContext)
+    const token = context.JWT 
+    const user = context.user
+    const messRepo = new MessageRepository(token)
+    const accountRepo = new AccountsRepository(token)
+
+
+    const [messages, setMessages] = useState([])
+    const [isSet, setIsSet] = useState(false)
+    
+    useEffect(() => {
+        if(!isSet){
+            let tempMess = [];
+            messRepo.getInbox().then(x =>{
+              x.forEach(data =>{
+                tempMess.push({id: data.id,to_student_id: data.to_student_id,to_staff_id: data.to_staff_id, from_staff_id: data.from_staff_id, body: data.message})
+              })
+              setMessages(tempMess)
+          })
+          setIsSet(true)
+        }
+      }, [isSet])
 
     return (
         <>
@@ -349,3 +276,6 @@ export default function Example() {
         </>
     )
 }
+Inbox.contextType = AppContext;
+
+export default Inbox
