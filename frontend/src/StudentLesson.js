@@ -40,71 +40,6 @@ const eventTypes = {
   advanced: { icon: ThumbUpIcon, bgColorClass: "bg-blue-500" },
   completed: { icon: CheckIcon, bgColorClass: "bg-green-500" },
 };
-const timeline = [
-  {
-    id: 1,
-    type: eventTypes.lessonComplete,
-    content: "Lesson 1",
-    target: "Lesson Title",
-    date: "Sep 20",
-    datetime: "2020-09-20",
-  },
-  {
-    id: 2,
-    type: eventTypes.assignmentComplete,
-    content: "Assignment 1",
-    target: "Assignment Title",
-    date: "Sep 22",
-    datetime: "2020-09-22",
-  },
-  {
-    id: 3,
-    type: eventTypes.lessonComplete,
-    content: "Lesson 2",
-    target: "Lesson Title",
-    date: "Sep 28",
-    datetime: "2020-09-28",
-  },
-  {
-    id: 4,
-    type: eventTypes.assignmentComplete,
-    content: "Assignment 2",
-    target: "Assignment Title",
-    date: "Sep 30",
-    datetime: "2020-09-30",
-  },
-  {
-    id: 5,
-    type: eventTypes.lessonComplete,
-    content: "Lesson 3",
-    target: "Lesson Title",
-    date: "Oct 4",
-    datetime: "2020-10-04",
-  },
-];
-const comments = [
-  {
-    id: 1,
-    name: "Leslie Alexander",
-    date: "4d ago",
-    imageId: "1494790108377-be9c29b29330",
-    body: "Ducimus quas delectus ad maxime totam doloribus reiciendis ex. Tempore dolorem maiores. Similique voluptatibus tempore non ut.",
-  },
-  {
-    id: 2,
-    name: "Michael Foster",
-    date: "4d ago",
-    imageId: "1519244703995-f4e0f30006d5",
-    body: "Et ut autem. Voluptatem eum dolores sint necessitatibus quos. Quis eum qui dolorem accusantium voluptas voluptatem ipsum. Quo facere iusto quia accusamus veniam id explicabo et aut.",
-  },
-  {
-    id: 3,
-    name: "Dries Vincent",
-    date: "4d ago",
-    imageId: "1506794778202-cad84cf45f1d",
-    body: "Expedita consequatur sit ea voluptas quo ipsam recusandae. Ab sint et voluptatem repudiandae voluptatem et eveniet. Nihil quas consequatur autem. Perferendis rerum et.",
-  },
-];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -114,11 +49,10 @@ const StudentLesson = () => {
   const [title, setTitle] = useState("Lesson Title")
   const [content, setContent] = useState("Lesson Content")
   const [lessons, setLessons] = useState([])
-  const [allStudents, setAllStudents] = useState([])
-  const [isSet, setIsSet] = useState(false)
-  const [hasStudents, setHasStudents] = useState(false)
   const [date, setDate] = useState("")
   const [complete, setComplete] = useState(false)
+  const [status, setStatus] = useState(undefined)
+  const [submission, setSubmission] = useState("")
   
   const params = useParams();
   const context = useContext(AppContext)
@@ -127,6 +61,13 @@ const StudentLesson = () => {
   const accountRepo = new AccountsRepository(token);
   const subRepo = new SubmissionRepository(token);
   const history = useHistory();
+
+  const makeSubmission = (e) => {
+    e.preventDefault()
+    subRepo.makeSubmission(params.lessonid, submission).then(() => {
+      setStatus({content: submission})
+    })
+  }
 
   useEffect(()=>{
     lessonRepo.getStatus(params.lessonid).then(status =>{
@@ -137,14 +78,10 @@ const StudentLesson = () => {
         setTitle(lesson.title);
         setContent(lesson.content);
     })
-    subRepo.getSummary(params.lessonid).then(summary => {
-        let temp = []
-        summary.forEach(item => {
-            temp.push({full_name: item.full_name, submission: item.content, complete: item.LessonStudent.completed, due: item.LessonStudent.due, student_id: item.LessonStudent.student_id})
-        })
-        setAllStudents(temp)
-        setIsSet(true)
-        setHasStudents(summary.length !== 0)
+    subRepo.getStatus(params.lessonid).then((stat) => {
+      if(stat){
+        setStatus(stat)
+      }
     })
   }, [title, content, date, complete]);
 
@@ -160,7 +97,7 @@ const StudentLesson = () => {
     if(!date){
       return
     }
-    
+
     let tokens = date.split("-")
     let tokens2 = tokens[2].split("T")
     let tokens3 = tokens2[1].split(":")
@@ -225,31 +162,11 @@ const StudentLesson = () => {
                         Response
                       </h2>
                     </div>
-                    <div className="px-4 py-6 sm:px-6">
-                      <ul role="list" className="space-y-8">
-                        {comments.map((comment) => (
-                          <li key={comment.id}>
-                            <div className="flex space-x-3">
-                              <div className="flex-shrink-0">
-                              </div>
-                              <div>
-                                <div className="text-sm">
-                                  {comment.name}
-                                </div>
-                                <div className="mt-1 text-sm text-gray-700">
-                                  <p>{comment.body}</p>
-                                </div>
-                              </div>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                    
                   </div>
                   <div className="bg-gray-50 px-4 py-6 sm:px-6">
                     <div className="flex space-x-3">
                       <div className="min-w-0 flex-1">
-                        <form action="#">
                           <div>
                             <label htmlFor="comment" className="sr-only">
                               About
@@ -258,22 +175,30 @@ const StudentLesson = () => {
                               id="comment"
                               name="comment"
                               rows={3}
-                              className="shadow-sm block w-full focus:ring-blue-500 focus:border-blue-500 sm:text-sm border border-gray-300 rounded-md"
+                              className={
+                                "shadow-sm block w-full focus:ring-blue-500 focus:border-blue-500 sm:text-sm border border-gray-300 rounded-md "
+                                + (!!status ? 'bg-gray-200 text-gray-500 border-gray-200 shadow-none' : ' ')
+                              }
+
                               placeholder="Add a response"
-                              defaultValue={""}
+                              defaultValue={(status && status.content) || ""}
+                              onChange={e => setSubmission(e.target.value)}
+                              disabled={!!status}
                             />
                           </div>
                           <div className="mt-3 flex items-right justify-between">
                             <button
                               type="submit"
-                              className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent 
-                              text-sm font-medium rounded-md text-white bg-blue-900 hover:bg-blue-800 
-                              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                              className={
+                                "ml-3 inline-flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 "
+                                + (!!status ? 'bg-gray-200 text-gray-500 border-gray-200 shadow-none' : 'bg-blue-900')
+                            }
+                              onClick={(e) => makeSubmission(e)}
+                              disabled={!!status}
                             >
                               Comment
                             </button>
                           </div>
-                        </form>
                       </div>
                     </div>
                   </div>
