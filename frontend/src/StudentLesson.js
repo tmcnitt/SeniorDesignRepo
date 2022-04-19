@@ -157,6 +157,10 @@ const StudentLesson = () => {
   }, [])
 
   const datePretty = (date) => {
+    if(!date){
+      return
+    }
+    
     let tokens = date.split("-")
     let tokens2 = tokens[2].split("T")
     let tokens3 = tokens2[1].split(":")
@@ -191,8 +195,7 @@ const StudentLesson = () => {
                       className="absolute pointer-events-none top-6 text-gray-600"
                       aria-hidden="true"
                     >
-                      {/* <span>Due: {datePretty(date)}</span> */}
-                      <span>Due: {date}</span>
+                      <span>Due: {datePretty(date)}</span>
                     </span>
                     <span className="absolute top-6 right-6" aria-hidden="true">
                       {complete ? <CheckCircleIcon className="block h-6 w-6 text-green-600" aria-hidden="true" /> : null}
