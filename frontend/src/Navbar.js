@@ -62,8 +62,6 @@ export function Navbar() {
                                     />
                             </Link>
 
-                            <Link to="/dashboard" className='text-3xl font-medium'>Mind the Agape</Link>
-
                             {/* Right section on desktop */}
                             <div className="hidden lg:ml-4 lg:flex lg:items-center pr-20">
                                 <p className='text-sm pr-2 font-medium'>{user.user.full_name}</p>
