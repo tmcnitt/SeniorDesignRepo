@@ -66,13 +66,6 @@ export function Navbar() {
                             <div className="hidden lg:ml-4 lg:flex lg:items-center pr-20">
                                 <p className='text-sm pr-2 font-medium'>{user.user.full_name}</p>
                                 
-                                <Link to="inbox"
-                                    type="button"
-                                    className="flex-shrink-0 p-1 text-cyan-200 rounded-full hover:text-white hover:bg-white hover:bg-opacity-10 focus:outline-none focus:ring-2 focus:ring-white"
-                                >
-                                    <span className="sr-only">View notifications</span>
-                                    <InboxIcon className="h-6 w-6" aria-hidden="true" />
-                                </Link>
 
 
                                 {/* Profile dropdown */}
