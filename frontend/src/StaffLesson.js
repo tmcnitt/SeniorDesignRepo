@@ -227,7 +227,7 @@ const StaffLesson = () => {
                                                         ? 
                                                             <div className='text-gray-500 pt-1'>Student has not made a submission</div> 
                                                         :
-                                                           <div className='rounded-lg cust_outline p-1 mt-5'> 
+                                                           <div className='rounded-lg cust_outline p-1 mt-5 display-line'> 
                                                                 <div className='relative group p-1 focus-within:ring-2 focus-within:ring-inset focus-within:ring-cyan-500'>
                                                                     {student.submission}
                                                                 </div>
