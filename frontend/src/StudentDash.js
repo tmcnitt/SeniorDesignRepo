@@ -52,7 +52,8 @@ const StudentDashboard = () => {
     let tempStu = [];
     accountRepo.getClassmates().then(x => {
       x.forEach(data => {
-        tempStu.push({ name: data.full_name })
+        if(data.full_name != user.user.full_name)
+          tempStu.push({ name: data.full_name })
       })
       setStudents(tempStu)
     })
