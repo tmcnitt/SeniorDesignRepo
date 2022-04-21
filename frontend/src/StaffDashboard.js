@@ -60,7 +60,7 @@ const StaffDashboard = () => {
   }, [isSet])
 
   const handleStudentSubmit = (event) => {
-    alert(`Created account for ${studentName} with email ${studentEmail}. Default password: 123`);
+    alert(`Created account for ${studentName} with email ${studentEmail} and default password 123. They will be able to change this password once they log in.`);
     accountRepo.addStudent(studentEmail, studentName, '123');
     setStudentEmail('')
     setStudentName('')
@@ -68,7 +68,7 @@ const StaffDashboard = () => {
   }
 
   const handleStaffSubmit = (event) => {
-    alert(`Created account for ${staffName} with email ${staffEmail}. Default password: 123`);
+    alert(`Created account for ${staffName} with email ${staffEmail} and default password 123. They will be able to change this password once they log in.`);
     accountRepo.addStaff(staffEmail, staffName, '123');
     setStaffEmail('')
     setStaffName('')
@@ -235,7 +235,7 @@ const StaffDashboard = () => {
                       <div className="flex justify-end">
                         <button
                           type="submit"
-                          className="mx-3 mb-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          className="mx-3 mb-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                           onClick={(e) => handleStudentSubmit(e)}
                         >
                           Submit
@@ -295,7 +295,7 @@ const StaffDashboard = () => {
                       <div className="flex justify-end">
                         <button
                           type="submit"
-                          className="mx-3 mb-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          className="mx-3 mb-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                           onClick={(e) => handleStaffSubmit(e)}
                         >
                           Submit

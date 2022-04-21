@@ -44,7 +44,7 @@ export class MessageRepository {
         })
     }
 
-    sendMessage(email, full_name, password){
+    sendMessage(message, to_user_type, to_user_id){
         return new Promise((resolve, reject) => {
             axios.post(`${this.url}/api/v1/messages`, {message, to_user_type, to_user_id}, {
                 headers: {

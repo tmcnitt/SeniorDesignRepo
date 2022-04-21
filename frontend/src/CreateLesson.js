@@ -171,7 +171,7 @@ const CreateLesson = () => {
                                       id="AssignToMyStudents"
                                       name="AssignToMyStudents"
                                       type="checkbox"
-                                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                                      className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded mr-1"
                                       checked={AssignToMyStudents}
                                     />
                                   </div>
@@ -180,11 +180,10 @@ const CreateLesson = () => {
                                       htmlFor="AssignToMyStudents"
                                       className="font-medium text-gray-700"
                                     >
-                                      Assign To My Students
+                                      All Students
                                     </label>
                                     <p className="text-gray-500">
-                                      Assigns the lesson to all students
-                                      assigned to you.
+                                      Assign the lesson to all of your students
                                     </p>
                                   </div>
                                 </div>
@@ -200,7 +199,7 @@ const CreateLesson = () => {
                                       id="AssignToSpec"
                                       name="AssignToSpec"
                                       type="checkbox"
-                                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                                      className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded mr-1"
                                       checked={AssignToSpec}
                                     />
                                   </div>
@@ -209,10 +208,10 @@ const CreateLesson = () => {
                                       htmlFor="AssignToSpec"
                                       className="font-medium text-gray-700"
                                     >
-                                      Assign To Specific Students
+                                      Specific Students
                                     </label>
                                     <p className="text-gray-500">
-                                      Assigns the lesson to specified students
+                                      Assign the lesson to specified students
                                     </p>
                                   </div>
                                 </div>
@@ -263,7 +262,7 @@ const CreateLesson = () => {
                 <div className="text-center sm:grid sm:grid-cols-4 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
                   {AllStudents.map((student, studentInd) => ( 
                     <div className="flex" key={student.id}>
-                      <input type="checkbox" id={student.id} name={student.id} 
+                      <input type="checkbox" id={student.id} name={student.id} className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded mr-1"
                       onChange={e => handleSelect(e)}/>
                       <label className="text-m font-medium text-gray-900 pl-2" htmlFor={student.id} > 
                         {student.name}
@@ -296,7 +295,7 @@ const CreateLesson = () => {
 
             <div className="pt-5">
               <div className="flex justify-end">
-                <Link to="/dashStaff"
+                <Link to="/dashboard"
                   type="button"
                   className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
@@ -304,9 +303,9 @@ const CreateLesson = () => {
                 </Link>
                 <button
                   type="submit"
-                  className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm 
-                  text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 
-                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent 
+                  text-sm font-medium rounded-md text-white bg-blue-900 hover:bg-blue-800 
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                   onClick={e => handleCreate(e)}
                 >
                   Create Lesson

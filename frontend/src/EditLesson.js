@@ -216,7 +216,7 @@ const EditLesson = () => {
                                       id="AssignToMyStudents"
                                       name="AssignToMyStudents"
                                       type="checkbox"
-                                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                                      className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded mr-1"
                                       checked={AssignToMyStudents}
                                     />
                                   </div>
@@ -225,11 +225,10 @@ const EditLesson = () => {
                                       htmlFor="AssignToMyStudents"
                                       className="font-medium text-gray-700"
                                     >
-                                      Assign To My Students
+                                      All Students
                                     </label>
                                     <p className="text-gray-500">
-                                      Assigns the lesson to all students
-                                      assigned to you.
+                                      Assign the lesson to all of your students
                                     </p>
                                   </div>
                                 </div>
@@ -254,7 +253,7 @@ const EditLesson = () => {
                                       id="AssignToSpec"
                                       name="AssignToSpec"
                                       type="checkbox"
-                                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                                      className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded mr-1"
                                       checked={AssignToSpec}
                                     />
                                   </div>
@@ -263,14 +262,13 @@ const EditLesson = () => {
                                       htmlFor="AssignToSpec"
                                       className="font-medium text-gray-700"
                                     >
-                                      Assign To Specific Students
+                                      Specific Students
                                     </label>
                                     <p className="text-gray-500">
-                                      Assigns the lesson to specified students
+                                      Assign the lesson to specified students
                                     </p>
                                   </div>
                                 </div>
-                              </div>
                               </div>
                             </div>
                           </div>
@@ -280,6 +278,7 @@ const EditLesson = () => {
                   </div>
                 </div>
               </div>
+            </div>
 
               {(AssignToMyStudents || AssignToSpec) && <>
                 <div className="pb-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
@@ -317,7 +316,7 @@ const EditLesson = () => {
                 <div className="text-center sm:grid sm:grid-cols-4 sm:gap-4 sm:items-center sm:border-t sm:border-gray-200 sm:pt-5">
                   {SelectedStudents.map((student, studentInd) => ( 
                     <div className="flex" key={student.student_id}>
-                      <input type="checkbox" id={student.student_id} name={student.student_id} 
+                      <input type="checkbox" id={student.student_id} name={student.student_id} className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded mr-1"
                       onChange={e => {handleSelect(e)}} defaultChecked={student.checked}/>
                       <label className="text-m font-medium text-gray-900 pl-2" htmlFor={student.student_id} > 
                         {student.name}
@@ -358,9 +357,9 @@ const EditLesson = () => {
                 </Link>
                 <button
                   type="submit"
-                  className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm 
-                  text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 
-                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent 
+                  text-sm font-medium rounded-md text-white bg-blue-900 hover:bg-blue-800 
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                   onClick={e => handleUpdate(e)}
                 >
                   Update Lesson
