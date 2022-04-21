@@ -279,7 +279,7 @@ const CreateLesson = () => {
                     Lesson Contents
                   </h3>
                   <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                    You may upload a file or write out the lesson below.
+                    Write the lesson contents below.
                   </p>
                 </div>
                 <textarea
