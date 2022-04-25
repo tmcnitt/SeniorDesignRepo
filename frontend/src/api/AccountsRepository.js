@@ -1,4 +1,5 @@
 import axios from "axios";
+import {URL} from "./index"
 
 axios.defaults.withCredentials = true;
 
@@ -8,7 +9,7 @@ export class AccountsRepository {
         this.authorization = authorization;
     }
 
-    url = 'http://ec2-54-176-1-242.us-west-1.compute.amazonaws.com';
+    url = URL;
 
     getStaffStudents(){
         return new Promise((resolve, reject) => {
